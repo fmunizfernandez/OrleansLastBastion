@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b436d52fd3a9cc04490eb5d01e9d9b82, type: 3}
-  m_Name: EnemyData_Kaillu
+  m_Name: RegularEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  Live: 500
+  Live: 3
   Speed: 1
-  Damage: 3
+  Damage: 1

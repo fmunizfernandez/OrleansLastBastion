@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b436d52fd3a9cc04490eb5d01e9d9b82, type: 3}
-  m_Name: EnemyData_Dragon
+  m_Name: FastEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   Live: 3
   Speed: 1
