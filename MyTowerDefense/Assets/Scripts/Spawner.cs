@@ -9,11 +9,11 @@ public class Spawner : MonoBehaviour
     [SerializeField] 
     private WaveData[] waves;
     [SerializeField] 
-    private ObjectPooler orcPool;
+    private ObjectPooler regularPool;
     [SerializeField] 
-    private ObjectPooler dragonPool;
+    private ObjectPooler fastPool;
     [SerializeField] 
-    private ObjectPooler kaijuPool;
+    private ObjectPooler blastPool;
     
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
@@ -29,9 +29,9 @@ public class Spawner : MonoBehaviour
     {
         _poolDictionary = new Dictionary<EnemyType, ObjectPooler>()
         {
-            { EnemyType.Orc,orcPool },
-            {EnemyType.Dragon,dragonPool },
-            {EnemyType.Kaiju,kaijuPool }
+            { EnemyType.Orc,regularPool },
+            {EnemyType.Dragon,fastPool },
+            {EnemyType.Kaiju,blastPool }
         };
     }
 

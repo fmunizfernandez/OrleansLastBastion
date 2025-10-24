@@ -2,7 +2,7 @@
 - Project name: MyTowerDefense
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: FastTower
+  - Name: Text (TMP)
   - Tag: Untagged
-  - Layer: Default
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
