@@ -8,4 +8,6 @@ public class TowerData : ScriptableObject
     public float shootInterval;
     public float projectilSpeed;
     public float projectilDuration;
+    public int initialCost;
+    public float incrementCost;
 }

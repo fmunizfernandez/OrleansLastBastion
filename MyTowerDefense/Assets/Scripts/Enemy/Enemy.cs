@@ -24,12 +24,10 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        _lives = data.Live;
         _currentWaypoint = 0;
         
         transform.position = _currentPath.GetPosition(_currentWaypoint);
         _targetPosition = _currentPath.GetPosition(_currentWaypoint);
-        UpdateHealthBarScale();
     }
 
     void Update()
@@ -70,6 +68,12 @@ public class Enemy : MonoBehaviour
         var scale = _healthBarOriginalScale;
         scale.x = _healthBarOriginalScale.x * floatPercent;
         healthBar.localScale= scale;
+    }
+
+    public void Initialize(float healthIncreasePercent)
+    {
+        _lives = data.Live * healthIncreasePercent;
+        UpdateHealthBarScale();
     }
 
     public EnemyData GetEnemyData() 

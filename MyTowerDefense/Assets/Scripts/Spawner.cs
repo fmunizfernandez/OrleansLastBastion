@@ -91,6 +91,11 @@ public class Spawner : MonoBehaviour
 
         var spawnedObject = pool.GetPooledObject();
         spawnedObject.transform.position = transform.position;
+
+        var healthMultiplier = 1f + (_spawnCounter * 0.1f);
+        var enemy = spawnedObject.GetComponent<Enemy>();
+        enemy.Initialize(healthMultiplier);
+
         spawnedObject.SetActive(true);
     }
 

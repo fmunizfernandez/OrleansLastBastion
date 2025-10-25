@@ -17,3 +17,5 @@ MonoBehaviour:
   shootInterval: 0.1
   projectilSpeed: 10
   projectilDuration: 2
+  initialCost: 25
+  incrementCost: 1.2
