@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
     private Transform healthBar;
     private Vector3 _healthBarOriginalScale;
 
-
     public static event Action<EnemyData> OnEnemyReachEnd;
     public static event Action<Enemy> OnEnemyDestroyed;
 
@@ -71,5 +70,10 @@ public class Enemy : MonoBehaviour
         var scale = _healthBarOriginalScale;
         scale.x = _healthBarOriginalScale.x * floatPercent;
         healthBar.localScale= scale;
+    }
+
+    public EnemyData GetEnemyData() 
+    {
+        return data;
     }
 }

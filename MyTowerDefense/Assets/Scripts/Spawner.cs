@@ -38,7 +38,6 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         OnWaveChanged?.Invoke(_currentWaveIndex + 1);
-        
     }
 
     private void OnEnable()
@@ -81,7 +80,6 @@ public class Spawner : MonoBehaviour
             {
                 _isBetweenWaves = true;
                 _wavecoolDown = _timeBetweenWaves;
-
             }
         }
     }

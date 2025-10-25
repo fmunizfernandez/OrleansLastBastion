@@ -6,4 +6,5 @@ public class EnemyData : ScriptableObject
     public int Live;
     public float Speed;
     public int Damage;
+    public int GoldForDead;
 }
