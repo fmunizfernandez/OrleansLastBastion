@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum EnemyType
 {
-    Orc=1,
-    Dragon=2,
-    Kaiju=3
+    Regular=1,
+    Fast=2,
+    Blast=3
 }

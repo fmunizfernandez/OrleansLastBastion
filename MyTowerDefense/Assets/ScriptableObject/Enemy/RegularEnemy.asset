@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: RegularEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   Live: 3
-  Speed: 1
-  Damage: 1
+  Speed: 2
+  Damage: 2
   GoldForDead: 2

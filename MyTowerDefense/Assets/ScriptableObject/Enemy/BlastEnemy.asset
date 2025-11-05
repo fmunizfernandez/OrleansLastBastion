@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b436d52fd3a9cc04490eb5d01e9d9b82, type: 3}
   m_Name: BlastEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  Live: 500
+  Live: 50
   Speed: 1
-  Damage: 3
+  Damage: 5
   GoldForDead: 5

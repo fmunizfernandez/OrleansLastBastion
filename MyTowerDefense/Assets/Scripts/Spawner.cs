@@ -17,11 +17,12 @@ public class Spawner : MonoBehaviour
     
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
-    private float _spawnTimer;
+    private float _spawnTimer=0;
+    private int _waveCounter = 0;
     private int _spawnCounter;
     private int _enemiesRemoved;
     private Dictionary<EnemyType, ObjectPooler> _poolDictionary;
-    private float _timeBetweenWaves = 2f;
+    private float _timeBetweenWaves = 1f;
     private float _wavecoolDown;
     private bool _isBetweenWaves = false;
 
@@ -29,15 +30,16 @@ public class Spawner : MonoBehaviour
     {
         _poolDictionary = new Dictionary<EnemyType, ObjectPooler>()
         {
-            { EnemyType.Orc,regularPool },
-            {EnemyType.Dragon,fastPool },
-            {EnemyType.Kaiju,blastPool }
+            { EnemyType.Regular,regularPool },
+            { EnemyType.Fast,fastPool },
+            { EnemyType.Blast,blastPool }
         };
     }
 
     private void Start()
     {
-        OnWaveChanged?.Invoke(_currentWaveIndex + 1);
+        _waveCounter++;
+        OnWaveChanged?.Invoke(_waveCounter);
     }
 
     private void OnEnable()
@@ -58,30 +60,41 @@ public class Spawner : MonoBehaviour
         {
             _wavecoolDown -= Time.deltaTime;
             if (_wavecoolDown <= 0f) 
-            {
-                _currentWaveIndex = (_currentWaveIndex + 1) % waves.Length;
-                OnWaveChanged?.Invoke(_currentWaveIndex + 1);
-                _spawnCounter = 0;
-                _enemiesRemoved = 0;
-                _spawnTimer = 0f;
-                _isBetweenWaves = false;
-            }
+                NewWave();
         }
         else 
         {
             _spawnTimer -= Time.deltaTime;
             if (_spawnTimer <= 0 && _spawnCounter < CurrentWave.EnemiesPerWave)
-            {
-                _spawnTimer = CurrentWave.SpawnInterval;
-                SpawnEnemy();
-                _spawnCounter++;
-            }
+                GetNewEnemyToSpawn();
             else if(_spawnCounter >= CurrentWave.EnemiesPerWave && _enemiesRemoved >= CurrentWave.EnemiesPerWave)
-            {
-                _isBetweenWaves = true;
-                _wavecoolDown = _timeBetweenWaves;
-            }
+                EndWave();
         }
+    }
+
+    private void GetNewEnemyToSpawn() 
+    {
+        _spawnTimer = CurrentWave.SpawnInterval;
+        SpawnEnemy();
+        _spawnCounter++;
+    }
+
+    private void EndWave() 
+    {
+        _isBetweenWaves = true;
+        _wavecoolDown = _timeBetweenWaves;
+    }
+
+    private void NewWave() 
+    {
+        _currentWaveIndex = (_currentWaveIndex + 1) % waves.Length;
+        _waveCounter++;
+        OnWaveChanged?.Invoke(_waveCounter);
+        _spawnCounter = 0;
+        _enemiesRemoved = 0;
+        _spawnTimer = 0f;
+
+        _isBetweenWaves = false;
     }
 
     private void SpawnEnemy()
@@ -92,7 +105,7 @@ public class Spawner : MonoBehaviour
         var spawnedObject = pool.GetPooledObject();
         spawnedObject.transform.position = transform.position;
 
-        var healthMultiplier = 1f + (_spawnCounter * 0.1f);
+        var healthMultiplier = 1f + (_waveCounter * 0.1f);
         var enemy = spawnedObject.GetComponent<Enemy>();
         enemy.Initialize(healthMultiplier);
 

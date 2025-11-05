@@ -4,10 +4,13 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
+    public EnemyData Data => data;
+
     private Path _currentPath;
     private Vector3 _targetPosition;
     private int _currentWaypoint;
     private float _lives;
+    private float _maxLives;
 
     [SerializeField]
     private Transform healthBar;
@@ -64,7 +67,7 @@ public class Enemy : MonoBehaviour
 
     private void UpdateHealthBarScale() 
     {
-        var floatPercent = _lives / data.Live;
+        var floatPercent = _lives / _maxLives;
         var scale = _healthBarOriginalScale;
         scale.x = _healthBarOriginalScale.x * floatPercent;
         healthBar.localScale= scale;
@@ -72,12 +75,8 @@ public class Enemy : MonoBehaviour
 
     public void Initialize(float healthIncreasePercent)
     {
-        _lives = data.Live * healthIncreasePercent;
+        _maxLives= data.Live * healthIncreasePercent;
+        _lives = _maxLives;
         UpdateHealthBarScale();
-    }
-
-    public EnemyData GetEnemyData() 
-    {
-        return data;
     }
 }

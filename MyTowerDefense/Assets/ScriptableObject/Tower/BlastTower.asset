@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f440ba2a60fb7478c5487f22c3e953, type: 3}
   m_Name: BlastTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  damage: 1
+  damage: 5
   range: 2.5
-  shootInterval: 0.1
+  shootInterval: 0.5
   projectilSpeed: 10
   projectilDuration: 2
   initialCost: 100
