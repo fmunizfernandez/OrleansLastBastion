@@ -1,6 +1,9 @@
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_Editor
+using UnityEditor;
+#endif
 
 public class Path : MonoBehaviour
 {
@@ -11,6 +14,8 @@ public class Path : MonoBehaviour
         return Waypoints[index].transform.position;
     }
 
+#if UNITY_Editor
+    
     private void OnDrawGizmos()
     {
         if (!Waypoints.Any())
@@ -30,4 +35,7 @@ public class Path : MonoBehaviour
             }
         }
     }
+
+#endif
+
 }
