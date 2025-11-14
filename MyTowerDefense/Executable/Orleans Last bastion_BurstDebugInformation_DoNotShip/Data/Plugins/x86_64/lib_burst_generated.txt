@@ -8,7 +8,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
@@ -125,7 +125,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
@@ -244,7 +244,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --float-precision=Standard
 --target-framework=NetFramework
 --float-mode=Fast
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
@@ -265,7 +265,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --float-precision=Standard
 --target-framework=NetFramework
 --float-mode=Fast
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
@@ -284,7 +284,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
@@ -312,7 +312,7 @@ Library: D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --dump=Function
 --float-precision=Standard
 --target-framework=NetFramework
---linker-options=PdbAltPath="MyTowerDefense_Data/Plugins/x86_64/lib_burst_generated.pdb"
+--linker-options=PdbAltPath="Orleans: Last bastion_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\Fer\Unity\My2DTowerDefense\TowerDefenseTFG\MyTowerDefense\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/6000.2.6f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
