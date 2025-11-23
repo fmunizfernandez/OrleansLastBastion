@@ -18,4 +18,5 @@ MonoBehaviour:
   projectilSpeed: 10
   projectilDuration: 2
   initialCost: 30
-  incrementCost: 1.3
+  sprite: {fileID: -1976463615, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
+  prefab: {fileID: 9199482504335050928, guid: 10ac1405af938b6489eda9fe43e6108b, type: 3}

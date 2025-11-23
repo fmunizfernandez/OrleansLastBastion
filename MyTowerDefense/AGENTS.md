@@ -2,7 +2,7 @@
 - Project name: MyTowerDefense
 - Unity version: Unity 6000.2.6f2
 - Active game object:
-  - Name: Path
+  - Name: Platform1
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Platform
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

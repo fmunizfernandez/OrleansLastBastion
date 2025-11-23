@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     private int _lives = 20;
     private int _initialGold = 100;
     private int _gold = 0;
+    private float _gameSpeed = 1f;
+
+    public float GameSpeed => _gameSpeed;
+
+    public int Gold => _gold;
 
     private void Awake()
     {
@@ -30,12 +35,14 @@ public class GameManager : MonoBehaviour
     {
         Enemy.OnEnemyReachEnd += Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed += Enemy_OnEnemyDestroyed;
+        TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
     }
 
     private void OnDisable()
     {
         Enemy.OnEnemyReachEnd -= Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed -= Enemy_OnEnemyDestroyed;
+        TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
     }
 
     private void Start()
@@ -71,14 +78,44 @@ public class GameManager : MonoBehaviour
         AddGold(Mathf.RoundToInt(enemy.Data.GoldForDead));
     }
 
+    private void TowerSelection_OnLocateTower(TowerData data)
+    {
+        if (_gold >= data.initialCost)
+        {
+            SubstractGold(data.initialCost);
+        }
+    }
+
     private void AddGold(int amount)
     {
         _gold += amount;
         OnGoldChange?.Invoke(_gold);
     }
 
-    public void SetTimeScale(float scale)
+    private void SubstractGold(int amount)
+    {
+        _gold -= amount;
+        OnGoldChange?.Invoke(_gold);
+    }
+
+    private void SetTimeScale(float scale)
     {
         Time.timeScale = scale;
+    }
+
+    public void SetGameSpeed(float timeSpeed) 
+    {
+        _gameSpeed = timeSpeed;
+        SetTimeScale(_gameSpeed);
+    }
+
+    public void Pause()
+    {
+        SetTimeScale(0f);
+    }
+
+    public void Resume()
+    {
+        SetTimeScale(_gameSpeed);
     }
 }
