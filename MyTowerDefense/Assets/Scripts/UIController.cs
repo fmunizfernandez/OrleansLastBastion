@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
@@ -12,20 +11,32 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private GameObject levelMenu;
     [SerializeField] private GameObject towerMenu;
-    //[SerializeField] private GameObject towerRemoveMenu;
+    [SerializeField] private GameObject towerRemoveMenu;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject victoryPanel;
 
-    [SerializeField] private Button sppedButtonx1;
-    [SerializeField] private Button sppedButtonx2;
+    [SerializeField] private Button speedButtonx1;
+    [SerializeField] private Button speedButtonx2;
+
+    [SerializeField] private Button muteButton;
+    [SerializeField] private Button volumeButton;
+
+    [SerializeField] private CanvasGroup gameplayGroup;
 
     private Platform _activePlatform;
     private Platform _activeRemovePlatform;
+
+    private const float SPEED_NORMAL = 1f;
+    private const float SPEED_FAST = 2f;
 
 
     private void Awake()
     {
         levelMenu.SetActive(false);
         towerMenu.SetActive(false);
-        //towerRemoveMenu.SetActive(false);
+        towerRemoveMenu.SetActive(false);
+        gameOverPanel.SetActive(false);
+        victoryPanel.SetActive(false);
     }
 
     private void OnEnable()
@@ -50,8 +61,8 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        sppedButtonx1.onClick.AddListener(() => SetGameSpeed(1f)); 
-        sppedButtonx2.onClick.AddListener(() => SetGameSpeed(2f));
+        Volume();
+        SpeedNormal();
     }
 
     #region Events
@@ -59,7 +70,13 @@ public class UIController : MonoBehaviour
     private void GameManager_OnEnemyEndsAlive(int life)
     {
         liveText.text = $"Live: {life}";
+
+        if (life <= 0) 
+        {
+            GameOver();
+        }
     }
+
     private void GameManager_OnGoldChange(int gold)
     {
         goldText.text = $"Gold: {gold}";
@@ -73,13 +90,13 @@ public class UIController : MonoBehaviour
     private void Platform_OnPlatformClicked(Platform platform)
     {
         _activePlatform = platform;
-        ShowTowerMenu();
+        SelectTower();
     }
 
     private void Platform_OnPlatformRemoveClicked(Platform platform)
     {
-        //_activeRemovePlatform = platform;
-        //ShowTowerRemoveMenu();
+        _activeRemovePlatform = platform;
+        OpenRemoveMenu();
     }
 
     private void TowerSelection_OnLocateTower(TowerData data)
@@ -89,59 +106,202 @@ public class UIController : MonoBehaviour
             _activePlatform.LocateTower(data);
         }
 
-        HideTowerMenu();
+        CancelSelection();
     }
 
-    #endregion
-
-    #region Level Menu
-
-    public void ShowLevelMenu()
-    {
-        levelMenu.SetActive(true);
-        GameManager.Instance.Pause();
-    }
-
-    public void HideLevelMenu()
-    {
-        levelMenu.SetActive(false);
-        GameManager.Instance.Resume();
-    }
     #endregion
 
     #region Tower Menu
+
     public void ShowTowerMenu()
     {
         towerMenu.SetActive(true);
-        Platform.IsTowerPanelOpened = true;
     }
 
     public void HideTowerMenu()
     {
         towerMenu.SetActive(false);
+    }
+
+    private void SelectTower()
+    {
+        ShowTowerMenu();
+        Platform.IsTowerPanelOpened = true;
+    }
+
+    public void CancelSelection()
+    {
+        HideTowerMenu();
         Platform.IsTowerPanelOpened = false;
     }
 
     #endregion
 
-    #region Tower Menu
-    //public void ShowTowerRemoveMenu()
-    //{
-    //    towerRemoveMenu.SetActive(true);
-    //}
+    #region Tower Remove Menu
 
-    //public void HideTowerRemoveMenu()
-    //{
-    //    towerRemoveMenu.SetActive(false);
-    //}
+    private void OpenRemoveMenu()
+    {
+        ShowTowerRemoveMenu();
+        Platform.IsTowerRemovePanelOpened = true;
+    }
+
+    public void CancelRemove()
+    {
+        HideTowerRemoveMenu();
+        Platform.IsTowerRemovePanelOpened = false;
+    }
+
+    public void ConfirmRemove()
+    {
+        HideTowerRemoveMenu();
+    }
+
+    public void ShowTowerRemoveMenu()
+    {
+        towerRemoveMenu.SetActive(true);
+    }
+
+    public void HideTowerRemoveMenu()
+    {
+        towerRemoveMenu.SetActive(false);
+    }
 
     #endregion
 
     #region SpeedButtons
 
+    public void SpeedNormal()
+    {
+        SetGameSpeed(SPEED_NORMAL);
+    }
+    public void SpeedDouble()
+    {
+        SetGameSpeed(SPEED_FAST);
+    }
+
     private void SetGameSpeed(float speed)
     {
         GameManager.Instance.SetGameSpeed(speed);
+        UpdateSpeedButtons();
+    }
+
+    private void UpdateSpeedButtons()
+    {
+        TMP_Text textx1 = speedButtonx1.GetComponentInChildren<TMP_Text>();
+        if (textx1 != null)
+        {
+            textx1.fontStyle = (GameManager.Instance.GameSpeed == 1f) ? FontStyles.Bold : FontStyles.Normal;
+        }
+
+        TMP_Text textx2 = speedButtonx2.GetComponentInChildren<TMP_Text>();
+        if (textx2 != null)
+        {
+            textx2.fontStyle = (GameManager.Instance.GameSpeed == 2f) ? FontStyles.Bold : FontStyles.Normal;
+        }
+    }
+
+    #endregion
+
+    #region Volume
+
+    public void Mute()
+    {
+        GameManager.Instance.Mute();
+        muteButton.gameObject.SetActive(false);
+        volumeButton.gameObject.SetActive(true);
+    }
+
+    public void Volume()
+    {
+        GameManager.Instance.Volume();
+        muteButton.gameObject.SetActive(true);
+        volumeButton.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+    #region Pause
+
+    public void Pause()
+    {
+        if (Platform.IsTowerPanelOpened)
+        {
+            HideTowerMenu();
+        }
+        else if (Platform.IsTowerRemovePanelOpened)
+        {
+            HideTowerRemoveMenu();
+        }
+
+        ShowLevelMenu();
+        GameManager.Instance.Pause();
+        ManageActionButtons(false);
+    }
+
+    public void Resume()
+    {
+        HideLevelMenu();
+        GameManager.Instance.Resume();
+        ManageActionButtons(true);
+
+        if (Platform.IsTowerPanelOpened)
+        {
+            ShowTowerMenu();
+        }
+        else if (Platform.IsTowerRemovePanelOpened)
+        {
+            ShowTowerRemoveMenu();
+        }
+    }
+
+    public void ShowLevelMenu()
+    {
+        levelMenu.SetActive(true);
+    }
+
+    public void HideLevelMenu()
+    {
+        levelMenu.SetActive(false);
+    }
+
+    private void ManageActionButtons(bool active)
+    {
+        gameplayGroup.interactable = active;
+        gameplayGroup.blocksRaycasts = active;
+    }
+
+    public void RestartLevel() 
+    {
+        GameManager.Instance.SetGameSpeed(SPEED_NORMAL);
+        var currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
+    }
+
+    public void QuitGame() 
+    {
+        Application.Quit();
+    }
+
+    public void MainMenu() 
+    {
+        GameManager.Instance.SetGameSpeed(SPEED_NORMAL);
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    #endregion
+
+    #region Victory/Defeat
+
+    private void GameOver() 
+    {
+        GameManager.Instance.SetGameSpeed(0f);
+        gameOverPanel.SetActive(true);
+    }
+
+    private void Victory() 
+    {
+        GameManager.Instance.SetGameSpeed(0f);
+        victoryPanel.SetActive(true);
     }
 
     #endregion

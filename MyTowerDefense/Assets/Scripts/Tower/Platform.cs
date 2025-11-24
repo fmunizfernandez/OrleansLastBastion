@@ -13,10 +13,11 @@ public class Platform : MonoBehaviour
     public bool HasTower => _hasTower;
 
     public static bool IsTowerPanelOpened { get; set; } = false;
+    public static bool IsTowerRemovePanelOpened { get; set; } = false;
 
     private void Update()
     {
-        if (IsTowerPanelOpened)
+        if (IsTowerPanelOpened || IsTowerRemovePanelOpened ||  Time.timeScale==0f)
             return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)

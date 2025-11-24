@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+   
     private void Enemy_OnEnemyReachEnd(EnemyData data)
     {
         _lives = Mathf.Max(0, _lives - data.Damage);
@@ -117,5 +118,18 @@ public class GameManager : MonoBehaviour
     public void Resume()
     {
         SetTimeScale(_gameSpeed);
+    }
+
+    public void Mute() 
+    {
+        var audiosource=Camera.main.GetComponent<AudioSource>();
+        audiosource.mute = true;
+    }
+
+    public void Volume() 
+    {
+        var audiosource = Camera.main.GetComponent<AudioSource>();
+        audiosource.mute = false;
+
     }
 }
