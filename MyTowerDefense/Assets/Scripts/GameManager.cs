@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,14 +29,13 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        LoadConfig();
     }
     private void OnEnable()
     {
         Enemy.OnEnemyReachEnd += Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed += Enemy_OnEnemyDestroyed;
         TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
     }
 
     private void OnDisable()
@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         Enemy.OnEnemyReachEnd -= Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed -= Enemy_OnEnemyDestroyed;
         TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
+        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
     }
 
     private void Start()
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
         OnGoldChange?.Invoke(_gold);
     }
 
-    private void LoadConfig() 
+    private void LoadConfig()
     {
         var path = System.IO.Path.Combine(Application.streamingAssetsPath, "Config/config.json");
 
@@ -62,12 +63,14 @@ public class GameManager : MonoBehaviour
             if (!string.IsNullOrEmpty(json))
             {
                 var configGame = JsonUtility.FromJson<Config>(json);
-                _lives = configGame.game.lives;
-                _initialGold = configGame.game.gold;
+
+                //Increase gold and life based on level data increase parameter
+                _lives = Mathf.RoundToInt(configGame.game.lives * (1 + LevelManager.Instance.Data.increaseLifes));
+                _initialGold = Mathf.RoundToInt(configGame.game.gold * (1 + LevelManager.Instance.Data.increaseResources));
             }
         }
     }
-   
+
     private void Enemy_OnEnemyReachEnd(EnemyData data)
     {
         _lives = Mathf.Max(0, _lives - data.Damage);
@@ -87,6 +90,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        LoadConfig();
+    }
+
     private void AddGold(int amount)
     {
         _gold += amount;
@@ -104,7 +112,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = scale;
     }
 
-    public void SetGameSpeed(float timeSpeed) 
+    public void SetGameSpeed(float timeSpeed)
     {
         _gameSpeed = timeSpeed;
         SetTimeScale(_gameSpeed);
@@ -120,13 +128,13 @@ public class GameManager : MonoBehaviour
         SetTimeScale(_gameSpeed);
     }
 
-    public void Mute() 
+    public void Mute()
     {
-        var audiosource=Camera.main.GetComponent<AudioSource>();
+        var audiosource = Camera.main.GetComponent<AudioSource>();
         audiosource.mute = true;
     }
 
-    public void Volume() 
+    public void Volume()
     {
         var audiosource = Camera.main.GetComponent<AudioSource>();
         audiosource.mute = false;

@@ -5,19 +5,20 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public static event Action<int> OnWaveChanged;
+    public static event Action OnVictory;
 
-    [SerializeField] 
+    [SerializeField]
     private WaveData[] waves;
-    [SerializeField] 
+    [SerializeField]
     private ObjectPooler regularPool;
-    [SerializeField] 
+    [SerializeField]
     private ObjectPooler fastPool;
-    [SerializeField] 
+    [SerializeField]
     private ObjectPooler blastPool;
-    
+
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
-    private float _spawnTimer=0;
+    private float _spawnTimer = 0;
     private int _waveCounter = 0;
     private int _spawnCounter;
     private int _enemiesRemoved;
@@ -59,34 +60,40 @@ public class Spawner : MonoBehaviour
         if (_isBetweenWaves)
         {
             _wavecoolDown -= Time.deltaTime;
-            if (_wavecoolDown <= 0f) 
+            if (_wavecoolDown <= 0f)
                 NewWave();
         }
-        else 
+        else
         {
             _spawnTimer -= Time.deltaTime;
             if (_spawnTimer <= 0 && _spawnCounter < CurrentWave.EnemiesPerWave)
                 GetNewEnemyToSpawn();
-            else if(_spawnCounter >= CurrentWave.EnemiesPerWave && _enemiesRemoved >= CurrentWave.EnemiesPerWave)
+            else if (_spawnCounter >= CurrentWave.EnemiesPerWave && _enemiesRemoved >= CurrentWave.EnemiesPerWave)
                 EndWave();
         }
     }
 
-    private void GetNewEnemyToSpawn() 
+    private void GetNewEnemyToSpawn()
     {
         _spawnTimer = CurrentWave.SpawnInterval;
         SpawnEnemy();
         _spawnCounter++;
     }
 
-    private void EndWave() 
+    private void EndWave()
     {
         _isBetweenWaves = true;
         _wavecoolDown = _timeBetweenWaves;
     }
 
-    private void NewWave() 
+    private void NewWave()
     {
+        if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
+        {
+            OnVictory?.Invoke();
+            return;
+        }
+     
         _currentWaveIndex = (_currentWaveIndex + 1) % waves.Length;
         _waveCounter++;
         OnWaveChanged?.Invoke(_waveCounter);
@@ -112,7 +119,7 @@ public class Spawner : MonoBehaviour
         spawnedObject.SetActive(true);
     }
 
-    private void Enemy_OnEnemyReachEnd(EnemyData data) 
+    private void Enemy_OnEnemyReachEnd(EnemyData data)
     {
         _enemiesRemoved++;
     }

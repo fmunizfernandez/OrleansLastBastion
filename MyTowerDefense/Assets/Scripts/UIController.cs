@@ -42,6 +42,7 @@ public class UIController : MonoBehaviour
     private void OnEnable()
     {
         Spawner.OnWaveChanged += Spawner_OnWaveChanged;
+        Spawner.OnVictory += Spawner_OnVictory;
         GameManager.OnEnemyEndsAlive += GameManager_OnEnemyEndsAlive;
         GameManager.OnGoldChange += GameManager_OnGoldChange;
         Platform.OnPlatformClicked += Platform_OnPlatformClicked;
@@ -52,6 +53,7 @@ public class UIController : MonoBehaviour
     private void OnDisable()
     {
         Spawner.OnWaveChanged -= Spawner_OnWaveChanged;
+        Spawner.OnVictory -= Spawner_OnVictory;
         GameManager.OnEnemyEndsAlive -= GameManager_OnEnemyEndsAlive;
         GameManager.OnGoldChange -= GameManager_OnGoldChange;
         Platform.OnPlatformClicked -= Platform_OnPlatformClicked;
@@ -85,6 +87,11 @@ public class UIController : MonoBehaviour
     private void Spawner_OnWaveChanged(int currentWave)
     {
         waveText.text = $"Wave: {currentWave}";
+    }
+
+    private void Spawner_OnVictory()
+    {
+        Victory();
     }
 
     private void Platform_OnPlatformClicked(Platform platform)
@@ -302,6 +309,11 @@ public class UIController : MonoBehaviour
     {
         GameManager.Instance.SetGameSpeed(0f);
         victoryPanel.SetActive(true);
+    }
+    
+    public void NextLevel() 
+    {
+    
     }
 
     #endregion
