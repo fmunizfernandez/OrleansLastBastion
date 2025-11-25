@@ -21,7 +21,7 @@ public class TowerSelection : MonoBehaviour
 
     public void LocateTower() 
     {
-        if (GameManager.Instance.Gold >= data.initialCost) 
+        if (LevelManager.Instance.Gold >= data.initialCost) 
         {
             OnLocateTower?.Invoke(data);
         }

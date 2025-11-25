@@ -1,6 +1,7 @@
 {
-  "game": {
     "lives": 20,
-    "gold": 100
-  }
+    "gold": 100,
+    "speed": 1.0,
+    "totalLevels": 5,
+    "sceneName": "Level"
 }

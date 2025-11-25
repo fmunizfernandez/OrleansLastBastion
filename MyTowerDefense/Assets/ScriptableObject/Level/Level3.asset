@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cc76f2e6977b6e42a95db86f4873f9c, type: 3}
-  m_Name: Level2
+  m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelName: Level2
-  levelNumber: 2
-  wavesNumber: 7
-  increaseResources: 0.02
+  levelName: Level3
+  levelNumber: 3
+  wavesNumber: 10
+  increaseResources: 0.05
   increaseLifes: 0

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelName: Level1
-  wavesNumber: 2
+  levelNumber: 1
+  wavesNumber: 5
   increaseResources: 0
   increaseLifes: 0

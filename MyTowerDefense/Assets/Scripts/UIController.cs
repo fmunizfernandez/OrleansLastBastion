@@ -43,8 +43,8 @@ public class UIController : MonoBehaviour
     {
         Spawner.OnWaveChanged += Spawner_OnWaveChanged;
         Spawner.OnVictory += Spawner_OnVictory;
-        GameManager.OnEnemyEndsAlive += GameManager_OnEnemyEndsAlive;
-        GameManager.OnGoldChange += GameManager_OnGoldChange;
+        LevelManager.OnEnemyEndsAlive += GameManager_OnEnemyEndsAlive;
+        LevelManager.OnGoldChange += GameManager_OnGoldChange;
         Platform.OnPlatformClicked += Platform_OnPlatformClicked;
         Platform.OnPlatformRemoveClicked += Platform_OnPlatformRemoveClicked;
         TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
@@ -54,8 +54,8 @@ public class UIController : MonoBehaviour
     {
         Spawner.OnWaveChanged -= Spawner_OnWaveChanged;
         Spawner.OnVictory -= Spawner_OnVictory;
-        GameManager.OnEnemyEndsAlive -= GameManager_OnEnemyEndsAlive;
-        GameManager.OnGoldChange -= GameManager_OnGoldChange;
+        LevelManager.OnEnemyEndsAlive -= GameManager_OnEnemyEndsAlive;
+        LevelManager.OnGoldChange -= GameManager_OnGoldChange;
         Platform.OnPlatformClicked -= Platform_OnPlatformClicked;
         Platform.OnPlatformRemoveClicked -= Platform_OnPlatformRemoveClicked;
         TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
@@ -188,7 +188,7 @@ public class UIController : MonoBehaviour
 
     private void SetGameSpeed(float speed)
     {
-        GameManager.Instance.SetGameSpeed(speed);
+        LevelManager.Instance.SetGameSpeed(speed);
         UpdateSpeedButtons();
     }
 
@@ -197,13 +197,13 @@ public class UIController : MonoBehaviour
         TMP_Text textx1 = speedButtonx1.GetComponentInChildren<TMP_Text>();
         if (textx1 != null)
         {
-            textx1.fontStyle = (GameManager.Instance.GameSpeed == 1f) ? FontStyles.Bold : FontStyles.Normal;
+            textx1.fontStyle = (LevelManager.Instance.GameSpeed == 1f) ? FontStyles.Bold : FontStyles.Normal;
         }
 
         TMP_Text textx2 = speedButtonx2.GetComponentInChildren<TMP_Text>();
         if (textx2 != null)
         {
-            textx2.fontStyle = (GameManager.Instance.GameSpeed == 2f) ? FontStyles.Bold : FontStyles.Normal;
+            textx2.fontStyle = (LevelManager.Instance.GameSpeed == 2f) ? FontStyles.Bold : FontStyles.Normal;
         }
     }
 
@@ -213,14 +213,14 @@ public class UIController : MonoBehaviour
 
     public void Mute()
     {
-        GameManager.Instance.Mute();
+        LevelManager.Instance.Mute();
         muteButton.gameObject.SetActive(false);
         volumeButton.gameObject.SetActive(true);
     }
 
     public void Volume()
     {
-        GameManager.Instance.Volume();
+        LevelManager.Instance.Volume();
         muteButton.gameObject.SetActive(true);
         volumeButton.gameObject.SetActive(false);
     }
@@ -241,14 +241,14 @@ public class UIController : MonoBehaviour
         }
 
         ShowLevelMenu();
-        GameManager.Instance.Pause();
+        LevelManager.Instance.Pause();
         ManageActionButtons(false);
     }
 
     public void Resume()
     {
         HideLevelMenu();
-        GameManager.Instance.Resume();
+        LevelManager.Instance.Resume();
         ManageActionButtons(true);
 
         if (Platform.IsTowerPanelOpened)
@@ -279,7 +279,7 @@ public class UIController : MonoBehaviour
 
     public void RestartLevel() 
     {
-        GameManager.Instance.SetGameSpeed(SPEED_NORMAL);
+        LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
         var currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
     }
@@ -291,7 +291,7 @@ public class UIController : MonoBehaviour
 
     public void MainMenu() 
     {
-        GameManager.Instance.SetGameSpeed(SPEED_NORMAL);
+        LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -301,19 +301,21 @@ public class UIController : MonoBehaviour
 
     private void GameOver() 
     {
-        GameManager.Instance.SetGameSpeed(0f);
+        LevelManager.Instance.SetGameSpeed(0f);
         gameOverPanel.SetActive(true);
+        ManageActionButtons(false);
     }
 
     private void Victory() 
     {
-        GameManager.Instance.SetGameSpeed(0f);
+        LevelManager.Instance.SetGameSpeed(0f);
         victoryPanel.SetActive(true);
+        ManageActionButtons(false);
     }
     
     public void NextLevel() 
     {
-    
+        SceneManager.LoadScene($"Level{GameManager.Instance.GetMaxUnlockedLevel()}");
     }
 
     #endregion

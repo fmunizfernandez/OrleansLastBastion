@@ -1449,51 +1449,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 342220081}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &357274091
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 357274092}
-  - component: {fileID: 357274093}
-  m_Layer: 0
-  m_Name: LevelManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &357274092
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 357274091}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.50298, y: -0.02183, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &357274093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 357274091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87c4b9c1ec40b5c4380588712772f8d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
-  data: {fileID: 11400000, guid: 509ef519c44828243b18d66f5af06131, type: 2}
 --- !u!1001 &372443323
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10432,7 +10387,7 @@ GameObject:
   - component: {fileID: 2101367778}
   - component: {fileID: 2101367779}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10465,6 +10420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9987c74a0f22a674c90cdbd1baa01e7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  data: {fileID: 11400000, guid: 509ef519c44828243b18d66f5af06131, type: 2}
 --- !u!114 &2139093716 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3023852511504612478, guid: c59d9cf3e85deee48bd81e7edb54855b,
@@ -10551,7 +10507,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1286896470}
   - {fileID: 2101367778}
-  - {fileID: 357274092}
   - {fileID: 84003156}
   - {fileID: 1363247696}
   - {fileID: 1485411909}

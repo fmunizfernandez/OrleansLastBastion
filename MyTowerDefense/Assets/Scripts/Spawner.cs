@@ -26,6 +26,7 @@ public class Spawner : MonoBehaviour
     private float _timeBetweenWaves = 1f;
     private float _wavecoolDown;
     private bool _isBetweenWaves = false;
+    private bool _isVictory = false;
 
     private void Awake()
     {
@@ -90,8 +91,12 @@ public class Spawner : MonoBehaviour
     {
         if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
         {
-            OnVictory?.Invoke();
-            return;
+            if (!_isVictory) 
+            {
+                _isVictory = true;
+                OnVictory?.Invoke();
+                return;
+            }
         }
      
         _currentWaveIndex = (_currentWaveIndex + 1) % waves.Length;

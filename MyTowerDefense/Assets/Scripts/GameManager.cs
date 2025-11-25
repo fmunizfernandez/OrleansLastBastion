@@ -1,5 +1,6 @@
-using System;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,17 +8,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public static event Action<int> OnEnemyEndsAlive;
-    public static event Action<int> OnGoldChange;
+    private Config _config;
+    private PlayerProgress _levelProgress;
 
-    private int _lives = 20;
-    private int _initialGold = 100;
-    private int _gold = 0;
-    private float _gameSpeed = 1f;
+    private static readonly string configPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Config/config.json");
+    private static readonly string progressPath = System.IO.Path.Combine(Application.streamingAssetsPath, "SaveDataGame/LevelProgress.json");
 
-    public float GameSpeed => _gameSpeed;
+    public const string LEVEL_PREFIX = "Level";
 
-    public int Gold => _gold;
+    public int Gold => _config.gold;
+    public int Lives => _config.lives;
+    public float Speed => _config.speed;
+
+    public string SceneName=> _config.sceneName;
 
     private void Awake()
     {
@@ -29,115 +32,123 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
-    private void OnEnable()
-    {
-        Enemy.OnEnemyReachEnd += Enemy_OnEnemyReachEnd;
-        Enemy.OnEnemyDestroyed += Enemy_OnEnemyDestroyed;
-        TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
-        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+
+        _config = LoadConfig();
+        _levelProgress = LoadProgress();
     }
 
-    private void OnDisable()
-    {
-        Enemy.OnEnemyReachEnd -= Enemy_OnEnemyReachEnd;
-        Enemy.OnEnemyDestroyed -= Enemy_OnEnemyDestroyed;
-        TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
-        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-    }
+    #region Config
 
-    private void Start()
+    private Config LoadConfig()
     {
-        _gold = _initialGold;
-        OnEnemyEndsAlive?.Invoke(_lives);
-        OnGoldChange?.Invoke(_gold);
-    }
-
-    private void LoadConfig()
-    {
-        var path = System.IO.Path.Combine(Application.streamingAssetsPath, "Config/config.json");
-
-        if (File.Exists(path))
+        //If file does not exist, create it
+        if (!File.Exists(configPath)) 
         {
-            var json = File.ReadAllText(path);
-            if (!string.IsNullOrEmpty(json))
+            var config = new Config
             {
-                var configGame = JsonUtility.FromJson<Config>(json);
+                gold = 100,
+                lives = 20,
+                speed = 1f,
+                totalLevels = 5,
+                sceneName = "Level"
+            };
 
-                //Increase gold and life based on level data increase parameter
-                _lives = Mathf.RoundToInt(configGame.game.lives * (1 + LevelManager.Instance.Data.increaseLifes));
-                _initialGold = Mathf.RoundToInt(configGame.game.gold * (1 + LevelManager.Instance.Data.increaseResources));
-            }
+            SaveConfig(config);
         }
+
+        var json = File.ReadAllText(configPath);
+        
+        //If after create or if file is empty, return default values
+        if (string.IsNullOrEmpty(json))
+            return new Config
+            {
+                gold = 100,
+                lives = 20,
+                speed = 1f,
+                totalLevels=5,
+                sceneName="Level"
+            };
+
+        return JsonUtility.FromJson<Config>(json);
     }
 
-    private void Enemy_OnEnemyReachEnd(EnemyData data)
+    private void SaveConfig(Config config) 
     {
-        _lives = Mathf.Max(0, _lives - data.Damage);
-        OnEnemyEndsAlive?.Invoke(_lives);
+        var json = JsonUtility.ToJson(config, true);
+        File.WriteAllText(configPath, json);
     }
 
-    private void Enemy_OnEnemyDestroyed(Enemy enemy)
+    #endregion
+
+    #region Progress
+
+    private void SaveProgress(PlayerProgress data)
     {
-        AddGold(Mathf.RoundToInt(enemy.Data.GoldForDead));
+        var json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(progressPath, json);
     }
 
-    private void TowerSelection_OnLocateTower(TowerData data)
+    private PlayerProgress LoadProgress()
     {
-        if (_gold >= data.initialCost)
+        if (!File.Exists(progressPath)) 
         {
-            SubstractGold(data.initialCost);
+            var playerProgress = new PlayerProgress
+            {
+                Progress = new List<LevelProgress>() { new LevelProgress { Level=1, IsPassed=false } }
+            };
+
+            SaveProgress(playerProgress);
         }
+        
+        var json = File.ReadAllText(progressPath);
+        return JsonUtility.FromJson<PlayerProgress>(json);
     }
 
-    private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    public void MarkLevelAsPassed(int levelNumber)
     {
-        LoadConfig();
+        //Check if level is created. If it is not, will create new node. Otherwise change the value
+        var existing = _levelProgress.Progress.FirstOrDefault(p => p.Level == levelNumber);
+        if (existing == null)
+        {
+            _levelProgress.Progress.Add(new LevelProgress
+            {
+                Level = levelNumber,
+                IsPassed = true
+            });
+        }
+        else
+        {
+            existing.IsPassed = true;
+        }
+
+        //Create also the new node to Start Playing in tha level if the number of total Levels is 
+        _levelProgress.Progress.Add(new LevelProgress
+        {
+            Level = levelNumber+1,
+            IsPassed = false
+        });
+
+        //Save in json
+        SaveProgress(_levelProgress);
     }
 
-    private void AddGold(int amount)
+    public int GetMaxUnlockedLevel() 
     {
-        _gold += amount;
-        OnGoldChange?.Invoke(_gold);
+        var level = _levelProgress.Progress.Where(p => !p.IsPassed).FirstOrDefault();
+        if (level == null)
+            return 1;
+
+        return level.Level;
     }
 
-    private void SubstractGold(int amount)
+    public void ResetProgress() 
     {
-        _gold -= amount;
-        OnGoldChange?.Invoke(_gold);
+        if (File.Exists(progressPath))
+            File.Delete(progressPath);
+
+        _levelProgress=LoadProgress();
     }
 
-    private void SetTimeScale(float scale)
-    {
-        Time.timeScale = scale;
-    }
-
-    public void SetGameSpeed(float timeSpeed)
-    {
-        _gameSpeed = timeSpeed;
-        SetTimeScale(_gameSpeed);
-    }
-
-    public void Pause()
-    {
-        SetTimeScale(0f);
-    }
-
-    public void Resume()
-    {
-        SetTimeScale(_gameSpeed);
-    }
-
-    public void Mute()
-    {
-        var audiosource = Camera.main.GetComponent<AudioSource>();
-        audiosource.mute = true;
-    }
-
-    public void Volume()
-    {
-        var audiosource = Camera.main.GetComponent<AudioSource>();
-        audiosource.mute = false;
-
-    }
+    #endregion
 }
+
