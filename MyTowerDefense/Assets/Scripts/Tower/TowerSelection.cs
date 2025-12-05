@@ -11,8 +11,6 @@ public class TowerSelection : MonoBehaviour
 
     public static event Action<TowerData> OnLocateTower;
 
-    public TowerData Data => data;
-
     private void OnEnable()
     {
         towerImage.sprite = data.sprite;

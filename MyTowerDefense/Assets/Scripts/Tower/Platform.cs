@@ -6,18 +6,23 @@ public class Platform : MonoBehaviour
 {
     public static event Action<Platform> OnPlatformClicked;
     public static event Action<Platform> OnPlatformRemoveClicked;
+    public static event Action<TowerData> OnRemoveTower;
 
     [SerializeField] private LayerMask platformLayerMask;
 
-    private bool _hasTower = false;
-    public bool HasTower => _hasTower;
+    public bool HasTower => _towerCreated != null;
+
+    private GameObject _towerCreated = null;
+    private TowerData _dataActive = null;
+
+    public TowerData DataActive => _dataActive;
 
     public static bool IsTowerPanelOpened { get; set; } = false;
     public static bool IsTowerRemovePanelOpened { get; set; } = false;
 
     private void Update()
     {
-        if (IsTowerPanelOpened || IsTowerRemovePanelOpened ||  Time.timeScale==0f)
+        if (IsTowerPanelOpened || IsTowerRemovePanelOpened || Time.timeScale == 0f)
             return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -45,7 +50,14 @@ public class Platform : MonoBehaviour
 
     public void LocateTower(TowerData data)
     {
-        Instantiate(data.prefab, transform.position, Quaternion.identity, transform);
-        _hasTower = true;
+        _towerCreated = Instantiate(data.prefab, transform.position, Quaternion.identity, transform);
+        _dataActive = data;
+    }
+
+    public void RemoveTower()
+    {
+        Destroy(_towerCreated);
+        OnRemoveTower?.Invoke(_dataActive);
+        _dataActive = null;
     }
 }

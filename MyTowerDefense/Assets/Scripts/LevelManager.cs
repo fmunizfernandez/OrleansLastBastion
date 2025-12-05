@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class LevelManager : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class LevelManager : MonoBehaviour
         TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         Spawner.OnVictory += Spawner_OnVictory;
+        Platform.OnRemoveTower += Platform_OnRemoveTower;
     }
 
     private void OnDisable()
@@ -50,6 +52,7 @@ public class LevelManager : MonoBehaviour
         TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
         SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         Spawner.OnVictory -= Spawner_OnVictory;
+        Platform.OnRemoveTower -= Platform_OnRemoveTower;
     }
 
     private void Start()
@@ -76,6 +79,11 @@ public class LevelManager : MonoBehaviour
         {
             SubstractGold(data.initialCost);
         }
+    }
+
+    private void Platform_OnRemoveTower(TowerData data)
+    {
+        AddGold(Mathf.RoundToInt(data.removeCost));
     }
 
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

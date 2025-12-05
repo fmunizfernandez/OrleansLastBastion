@@ -24,7 +24,6 @@ public class UIController : MonoBehaviour
     [SerializeField] private CanvasGroup gameplayGroup;
 
     private Platform _activePlatform;
-    private Platform _activeRemovePlatform;
 
     private const float SPEED_NORMAL = 1f;
     private const float SPEED_FAST = 2f;
@@ -102,7 +101,7 @@ public class UIController : MonoBehaviour
 
     private void Platform_OnPlatformRemoveClicked(Platform platform)
     {
-        _activeRemovePlatform = platform;
+        _activePlatform = platform;
         OpenRemoveMenu();
     }
 
@@ -120,12 +119,12 @@ public class UIController : MonoBehaviour
 
     #region Tower Menu
 
-    public void ShowTowerMenu()
+    private void ShowTowerMenu()
     {
         towerMenu.SetActive(true);
     }
 
-    public void HideTowerMenu()
+    private void HideTowerMenu()
     {
         towerMenu.SetActive(false);
     }
@@ -149,6 +148,7 @@ public class UIController : MonoBehaviour
     private void OpenRemoveMenu()
     {
         ShowTowerRemoveMenu();
+        towerRemoveMenu.GetComponent<TMP_Text>().text = _activePlatform.DataActive.removeCost.ToString();
         Platform.IsTowerRemovePanelOpened = true;
     }
 
@@ -158,17 +158,22 @@ public class UIController : MonoBehaviour
         Platform.IsTowerRemovePanelOpened = false;
     }
 
-    public void ConfirmRemove()
+    public void ConfirmRemove() 
     {
-        HideTowerRemoveMenu();
+        if (_activePlatform.HasTower)
+        {
+            _activePlatform.RemoveTower();
+        }
+
+        CancelRemove();
     }
 
-    public void ShowTowerRemoveMenu()
+    private void ShowTowerRemoveMenu()
     {
         towerRemoveMenu.SetActive(true);
     }
 
-    public void HideTowerRemoveMenu()
+    private void HideTowerRemoveMenu()
     {
         towerRemoveMenu.SetActive(false);
     }
@@ -181,6 +186,7 @@ public class UIController : MonoBehaviour
     {
         SetGameSpeed(SPEED_NORMAL);
     }
+    
     public void SpeedDouble()
     {
         SetGameSpeed(SPEED_FAST);

@@ -6,15 +6,17 @@ public class TowerRemove : MonoBehaviour
 {
     [SerializeField] private TMP_Text costText;
 
-    public static event Action<TowerData> OnRemoveTower;
-    
+    public static event Action OnRemoveTower;
+
+    private TowerData _data;
+
     private void OnEnable()
     {
-        //costText.text = data.initialCost.ToString();
+        costText.text = "100";
     }
 
     public void RemoveTower()
     {
-        //OnRemoveTower?.Invoke(data);
+        OnRemoveTower?.Invoke();
     }
 }

@@ -71,7 +71,6 @@ public class Tower : MonoBehaviour
         }
     }
 
-
     private void Shoot() 
     {
         if (_enemiesInRange.Any()) 
