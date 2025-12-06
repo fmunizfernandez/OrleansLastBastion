@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -25,7 +24,6 @@ public class Spawner : MonoBehaviour
     private int _waveCounter = 0;
     private int _spawnCounter;
     private int _enemiesRemoved;
-    private Dictionary<EnemyType, ObjectPooler> _poolDictionary;
     private float _timeBetweenWaves = 7.5f;
     private float _wavecoolDown;
     private float _firstWavecoolDown;

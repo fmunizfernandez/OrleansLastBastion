@@ -1,0 +1,12 @@
+{
+    "Progress": [
+        {
+            "Level": 1,
+            "IsPassed": true
+        },
+        {
+            "Level": 2,
+            "IsPassed": false
+        }
+    ]
+}

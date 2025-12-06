@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: d312e9efd92bb2349a2c03118762aa50, type: 3}
-  poolSize: 100
+  poolSize: 50
 --- !u!4 &284462885
 Transform:
   m_ObjectHideFlags: 0
@@ -4663,7 +4663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: fbfea41e80d98a642a259715b5e12060, type: 3}
-  poolSize: 100
+  poolSize: 50
 --- !u!1001 &1269434131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4868,7 +4868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: 1dd36ee0c66d0ae4ab88a13e4af508ed, type: 3}
-  poolSize: 100
+  poolSize: 50
 --- !u!4 &1270948035
 Transform:
   m_ObjectHideFlags: 0
