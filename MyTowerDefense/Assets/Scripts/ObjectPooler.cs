@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectPooler : MonoBehaviour
 {
     [SerializeField] private GameObject prefab;
-    [SerializeField] private int poolSize = 5;
+    [SerializeField] private int poolSize =20;
     private List<GameObject> _pool;
 
 

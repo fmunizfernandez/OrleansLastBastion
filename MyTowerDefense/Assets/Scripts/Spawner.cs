@@ -1,20 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+[Serializable]
+public class EnemyPool
+{
+    public EnemyData enemyType;    
+    public ObjectPooler pool;      
+}
 
 public class Spawner : MonoBehaviour
 {
     public static event Action<int> OnWaveChanged;
     public static event Action OnVictory;
 
-    [SerializeField]
-    private WaveData[] waves;
-    [SerializeField]
-    private ObjectPooler regularPool;
-    [SerializeField]
-    private ObjectPooler fastPool;
-    [SerializeField]
-    private ObjectPooler blastPool;
+    [SerializeField] private EnemyPool[] enemyPools;
+
+    [SerializeField] private WaveData[] waves;
+    [SerializeField] private ObjectPooler regularPool;
+    [SerializeField] private ObjectPooler fastPool;
+    [SerializeField] private ObjectPooler blastPool;
 
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
@@ -23,9 +29,15 @@ public class Spawner : MonoBehaviour
     private int _spawnCounter;
     private int _enemiesRemoved;
     private Dictionary<EnemyType, ObjectPooler> _poolDictionary;
-    private float _timeBetweenWaves = 1f;
+    private float _timeBetweenWaves = 7.5f;
     private float _wavecoolDown;
+    private float _firstWavecoolDown;
     private bool _isBetweenWaves = false;
+    private bool _isFirstWave = true;
+
+    private int _currentGroupIndex;
+    private int _spawnedInCurrentGroup;
+
     private bool _isVictory = false;
 
     private void Awake()
@@ -40,8 +52,8 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        _waveCounter++;
-        OnWaveChanged?.Invoke(_waveCounter);
+        _firstWavecoolDown = _timeBetweenWaves;
+        OnWaveChanged?.Invoke(_waveCounter + 1);
     }
 
     private void OnEnable()
@@ -58,6 +70,17 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        if (_isFirstWave)
+        {
+            _firstWavecoolDown -= Time.deltaTime;
+            if (_firstWavecoolDown <= 0f)
+            {
+                NewWave();
+                _isFirstWave = false;
+            }
+            return;
+        }
+
         if (_isBetweenWaves)
         {
             _wavecoolDown -= Time.deltaTime;
@@ -76,9 +99,17 @@ public class Spawner : MonoBehaviour
 
     private void GetNewEnemyToSpawn()
     {
-        _spawnTimer = CurrentWave.SpawnInterval;
+        if (_spawnedInCurrentGroup >= CurrentWave.EnemyGroupPerWave[_currentGroupIndex].count)
+        {
+            _currentGroupIndex++;
+            _spawnedInCurrentGroup = 0;
+        }
+
         SpawnEnemy();
+       
+        _spawnedInCurrentGroup++;
         _spawnCounter++;
+        _spawnTimer = CurrentWave.SpawnInterval;
     }
 
     private void EndWave()
@@ -91,36 +122,38 @@ public class Spawner : MonoBehaviour
     {
         if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
         {
-            if (!_isVictory) 
+            if (!_isVictory)
             {
                 _isVictory = true;
                 OnVictory?.Invoke();
                 return;
             }
         }
-     
-        _currentWaveIndex = (_currentWaveIndex + 1) % waves.Length;
+
+        _currentWaveIndex = (_isFirstWave) ? _waveCounter : (_currentWaveIndex + 1) % waves.Length;
         _waveCounter++;
         OnWaveChanged?.Invoke(_waveCounter);
+        
         _spawnCounter = 0;
         _enemiesRemoved = 0;
         _spawnTimer = 0f;
+        _currentGroupIndex = 0;
+        _spawnedInCurrentGroup = 0;
 
         _isBetweenWaves = false;
     }
 
     private void SpawnEnemy()
     {
-        if (!_poolDictionary.TryGetValue(CurrentWave.EnemyType, out var pool))
-            return;
+        var group = CurrentWave.EnemyGroupPerWave[_currentGroupIndex];
 
-        var spawnedObject = pool.GetPooledObject();
+        var pool = enemyPools.First(p => p.enemyType == group.enemyType).pool;
+        GameObject spawnedObject = pool.GetPooledObject();
         spawnedObject.transform.position = transform.position;
 
         var healthMultiplier = 1f + (_waveCounter * 0.1f);
-        var enemy = spawnedObject.GetComponent<Enemy>();
+        var enemy = spawnedObject.GetComponent<Enemy>();   
         enemy.Initialize(healthMultiplier);
-
         spawnedObject.SetActive(true);
     }
 

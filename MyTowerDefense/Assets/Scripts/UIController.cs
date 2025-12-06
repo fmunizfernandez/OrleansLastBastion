@@ -148,7 +148,7 @@ public class UIController : MonoBehaviour
     private void OpenRemoveMenu()
     {
         ShowTowerRemoveMenu();
-        towerRemoveMenu.GetComponent<TMP_Text>().text = _activePlatform.DataActive.removeCost.ToString();
+        //towerRemoveMenu.GetComponent<TMP_Text>().text = _activePlatform.DataActive.removeCost.ToString();
         Platform.IsTowerRemovePanelOpened = true;
     }
 
@@ -286,6 +286,7 @@ public class UIController : MonoBehaviour
     public void RestartLevel() 
     {
         LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
+        
         var currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
     }
