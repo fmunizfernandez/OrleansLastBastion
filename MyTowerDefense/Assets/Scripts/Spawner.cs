@@ -18,9 +18,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private EnemyPool[] enemyPools;
 
     [SerializeField] private WaveData[] waves;
-    [SerializeField] private ObjectPooler regularPool;
-    [SerializeField] private ObjectPooler fastPool;
-    [SerializeField] private ObjectPooler blastPool;
 
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
@@ -39,16 +36,6 @@ public class Spawner : MonoBehaviour
     private int _spawnedInCurrentGroup;
 
     private bool _isVictory = false;
-
-    private void Awake()
-    {
-        _poolDictionary = new Dictionary<EnemyType, ObjectPooler>()
-        {
-            { EnemyType.Regular,regularPool },
-            { EnemyType.Fast,fastPool },
-            { EnemyType.Blast,blastPool }
-        };
-    }
 
     private void Start()
     {
