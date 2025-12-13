@@ -8,6 +8,5 @@ public class LevelData : ScriptableObject
     public int wavesNumber;
     public float increaseResources;
     public float increaseLifes;
-
-    //public AudioClip sceneMusic;
+    public int upgradeNo;
 }

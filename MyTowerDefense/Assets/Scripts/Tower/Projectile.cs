@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Projectile : MonoBehaviour
 {
-    private TowerData _data;
+    private float _damage;
+    private float _projectileSpeed;
     private Vector3 _shootDirection;
     private float _projectilDuration;
 
@@ -12,27 +12,28 @@ public class Projectile : MonoBehaviour
     {
         if (_projectilDuration <= 0)
             gameObject.SetActive(false);
-        else 
+        else
         {
-            _projectilDuration-= Time.deltaTime;
-            transform.position += new Vector3(_shootDirection.x, _shootDirection.y) * _data.projectilSpeed * Time.deltaTime;
+            _projectilDuration -= Time.deltaTime;
+            transform.position += new Vector3(_shootDirection.x, _shootDirection.y) * _projectileSpeed * Time.deltaTime;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy")) 
+        if (collision.CompareTag("Enemy"))
         {
-            var enemy=collision.GetComponent<Enemy>();
-            enemy.TakeDamage(_data.damage);
+            var enemy = collision.GetComponent<Enemy>();
+            enemy.TakeDamage(_damage);
             gameObject.SetActive(false);
         }
     }
 
-    public void Shoot(TowerData data, Vector3 direction) 
+    public void Shoot(float damage, float projectileSpeed, float projectileDuration, Vector3 direction)
     {
-        _data = data;
+        _projectileSpeed = projectileSpeed;
+        _damage = damage;
         _shootDirection = direction;
-        _projectilDuration = data.projectilDuration;
+        _projectilDuration = projectileDuration;
     }
 }

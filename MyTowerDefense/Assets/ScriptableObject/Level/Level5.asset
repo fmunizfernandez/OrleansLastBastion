@@ -17,3 +17,4 @@ MonoBehaviour:
   wavesNumber: 20
   increaseResources: 0.15
   increaseLifes: 0
+  upgradeNo: 1

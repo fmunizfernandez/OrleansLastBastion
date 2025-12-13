@@ -1,3 +1,7 @@
+using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,11 +27,22 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private CanvasGroup gameplayGroup;
 
+    [SerializeField] private GameObject towerMenuPrefab;
+    [SerializeField] private Transform towerMenuContainer;
+    [SerializeField] private GameObject towerMenuNoResourceText;
+
+    [SerializeField] private Transform towerRemoveButtonContainer;
+    [SerializeField] private GameObject towerRemoveDestroyButton;
+    [SerializeField] private GameObject towerRemoveEliteButton;
+    [SerializeField] private GameObject towerRemoveNoResourceText;
+
+    [SerializeField] private TowerData[] towerMenuData;
+    private List<GameObject> _activeSelectors =new List<GameObject>();
+
     private Platform _activePlatform;
 
     private const float SPEED_NORMAL = 1f;
     private const float SPEED_FAST = 2f;
-
 
     private void Awake()
     {
@@ -36,6 +51,8 @@ public class UIController : MonoBehaviour
         towerRemoveMenu.SetActive(false);
         gameOverPanel.SetActive(false);
         victoryPanel.SetActive(false);
+        towerMenuNoResourceText.SetActive(false);
+        towerRemoveNoResourceText.SetActive(false);
     }
 
     private void OnEnable()
@@ -47,6 +64,8 @@ public class UIController : MonoBehaviour
         Platform.OnPlatformClicked += Platform_OnPlatformClicked;
         Platform.OnPlatformRemoveClicked += Platform_OnPlatformRemoveClicked;
         TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
+        TowerRemove.OnRemoveTower += TowerRemove_OnRemoveTower;
+        TowerRemove.OnImproveTower += TowerRemove_OnImproveTower;
     }
 
     private void OnDisable()
@@ -58,6 +77,7 @@ public class UIController : MonoBehaviour
         Platform.OnPlatformClicked -= Platform_OnPlatformClicked;
         Platform.OnPlatformRemoveClicked -= Platform_OnPlatformRemoveClicked;
         TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
+        TowerRemove.OnRemoveTower -= TowerRemove_OnRemoveTower;
     }
 
     private void Start()
@@ -109,12 +129,43 @@ public class UIController : MonoBehaviour
     {
         if (!_activePlatform.HasTower)
         {
-            _activePlatform.LocateTower(data);
+            if (LevelManager.Instance.Gold >= data.initialCost)
+            {
+                _activePlatform.LocateTower(data);
+                CancelSelection();
+            }
+            else 
+            {
+                StartCoroutine(ShowNoResourceMessage(towerMenuNoResourceText));
+            }
         }
-
-        CancelSelection();
     }
 
+    private void TowerRemove_OnRemoveTower(TowerData data)
+    {
+        if (_activePlatform.HasTower)
+        {
+            _activePlatform.RemoveTower();
+        }
+
+        CancelRemove();
+    }
+
+    private void TowerRemove_OnImproveTower(TowerData data)
+    {
+        if (_activePlatform.HasTower)
+        {
+            if (LevelManager.Instance.Gold >= data.ImproveCost)
+            {
+                _activePlatform.ImproveTower(data);
+                CancelRemove();
+            }
+            else
+            {
+                StartCoroutine(ShowNoResourceMessage(towerRemoveNoResourceText));
+            }
+        }
+    }
     #endregion
 
     #region Tower Menu
@@ -122,6 +173,7 @@ public class UIController : MonoBehaviour
     private void ShowTowerMenu()
     {
         towerMenu.SetActive(true);
+        PopulateTowerSelectionUnits();
     }
 
     private void HideTowerMenu()
@@ -141,14 +193,36 @@ public class UIController : MonoBehaviour
         Platform.IsTowerPanelOpened = false;
     }
 
+    private void PopulateTowerSelectionUnits() 
+    {
+        DestroyActiveSelectors();
+
+        foreach (var towerData in towerMenuData) 
+        {
+            var gameObject = Instantiate(towerMenuPrefab,towerMenuContainer);
+
+            var towerSelectorObj= gameObject.GetComponent<TowerSelection>();
+            towerSelectorObj.Inizialite(towerData);
+
+            _activeSelectors.Add(gameObject);
+        }
+    }
+
+    private IEnumerator ShowNoResourceMessage(GameObject gObj)
+    {
+        gObj.SetActive(true);
+        yield return new WaitForSecondsRealtime(3f);
+        gObj.SetActive(false);
+    }
+
     #endregion
 
     #region Tower Remove Menu
 
     private void OpenRemoveMenu()
     {
+        PopulateTowerRemoveButtons();
         ShowTowerRemoveMenu();
-        //towerRemoveMenu.GetComponent<TMP_Text>().text = _activePlatform.DataActive.removeCost.ToString();
         Platform.IsTowerRemovePanelOpened = true;
     }
 
@@ -156,16 +230,6 @@ public class UIController : MonoBehaviour
     {
         HideTowerRemoveMenu();
         Platform.IsTowerRemovePanelOpened = false;
-    }
-
-    public void ConfirmRemove() 
-    {
-        if (_activePlatform.HasTower)
-        {
-            _activePlatform.RemoveTower();
-        }
-
-        CancelRemove();
     }
 
     private void ShowTowerRemoveMenu()
@@ -178,6 +242,15 @@ public class UIController : MonoBehaviour
         towerRemoveMenu.SetActive(false);
     }
 
+    private void PopulateTowerRemoveButtons()
+    {
+        var destroyButton = towerRemoveDestroyButton.GetComponent<TowerRemove>();
+        destroyButton.InitRemove(_activePlatform.ActiveTowerData);
+
+        var eliteButton= towerRemoveEliteButton.GetComponent<TowerRemove>();
+        eliteButton.InitImprove(_activePlatform.ActiveTowerData);
+        towerRemoveEliteButton.SetActive(!_activePlatform.EndUpgrades);
+    }
     #endregion
 
     #region SpeedButtons
@@ -326,4 +399,14 @@ public class UIController : MonoBehaviour
     }
 
     #endregion
+
+    private void DestroyActiveSelectors()
+    {
+        foreach (var selector in _activeSelectors)
+        {
+            Destroy(selector);
+        }
+
+        _activeSelectors.Clear();
+    }
 }

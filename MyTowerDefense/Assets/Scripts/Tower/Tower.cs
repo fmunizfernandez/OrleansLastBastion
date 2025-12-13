@@ -12,6 +12,7 @@ public class Tower : MonoBehaviour
     private ObjectPooler _projectilePool;
 
     private float _shootTimer;
+    private int _upgradeCount = 0;
 
     private void OnEnable()
     {
@@ -25,20 +26,25 @@ public class Tower : MonoBehaviour
 
     private void Start()
     {
+        var range = data.range * (1 + data.GetRangeMultiplier(_upgradeCount));
+        var shootInterval = data.shootInterval * (1-data.GetShootIntervalMultiplier(_upgradeCount));
+
         _circleCollider = GetComponent<CircleCollider2D>();
-        _circleCollider.radius = data.range/transform.localScale.x;
+        _circleCollider.radius = range / transform.localScale.x;
 
         _enemiesInRange = new List<Enemy>();
-        _projectilePool= GetComponent<ObjectPooler>();
-        _shootTimer = data.shootInterval;
+        _projectilePool = GetComponent<ObjectPooler>();
+        _shootTimer = shootInterval;
     }
 
-    private void Update() 
+    private void Update()
     {
+        var shootInterval = data.shootInterval * (1-data.GetShootIntervalMultiplier(_upgradeCount));
+
         _shootTimer -= Time.deltaTime;
-        if (_shootTimer <= 0) 
+        if (_shootTimer <= 0)
         {
-            _shootTimer = data.shootInterval;
+            _shootTimer = shootInterval;
             Shoot();
         }
     }
@@ -59,7 +65,7 @@ public class Tower : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-         if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy"))
         {
             var enemy = collision.GetComponent<Enemy>();
             if (_enemiesInRange.Contains(enemy))
@@ -69,22 +75,28 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private void Shoot() 
+    private void Shoot()
     {
-        if (_enemiesInRange.Any()) 
+        if (_enemiesInRange.Any())
         {
             var projectileObj = _projectilePool.GetPooledObject();
-            projectileObj.transform.position=transform.position;
+            projectileObj.transform.position = transform.position;
             projectileObj.SetActive(true);
 
             var shootDirection = (_enemiesInRange.First().transform.position - transform.position).normalized;
+            var damage = data.damage * (1 + data.GetDamageMultiplier(_upgradeCount));
 
-            projectileObj.GetComponent<Projectile>().Shoot(data,shootDirection);
+            projectileObj.GetComponent<Projectile>().Shoot(damage, data.projectilSpeed, data.projectilDuration, shootDirection);
         }
     }
 
     private void Enemy_OnEnemyDestroyed(Enemy enemy)
     {
         _enemiesInRange.Remove(enemy);
+    }
+
+    public void SetUpgrade(int upgradeCount)
+    {
+        _upgradeCount = upgradeCount;
     }
 }

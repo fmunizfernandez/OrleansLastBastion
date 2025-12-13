@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelData data;
 
     public LevelData Data => data;
+    public int MaxUpgradeNo => data.upgradeNo;
 
     public float GameSpeed => _gameSpeed;
 
@@ -40,9 +41,10 @@ public class LevelManager : MonoBehaviour
         Enemy.OnEnemyReachEnd += Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed += Enemy_OnEnemyDestroyed;
         TowerSelection.OnLocateTower += TowerSelection_OnLocateTower;
+        TowerRemove.OnRemoveTower += TowerRemove_OnRemoveTower;
+        TowerRemove.OnImproveTower += TowerRemove_OnImproveTower;
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         Spawner.OnVictory += Spawner_OnVictory;
-        Platform.OnRemoveTower += Platform_OnRemoveTower;
     }
 
     private void OnDisable()
@@ -50,9 +52,10 @@ public class LevelManager : MonoBehaviour
         Enemy.OnEnemyReachEnd -= Enemy_OnEnemyReachEnd;
         Enemy.OnEnemyDestroyed -= Enemy_OnEnemyDestroyed;
         TowerSelection.OnLocateTower -= TowerSelection_OnLocateTower;
+        TowerRemove.OnRemoveTower -= TowerRemove_OnRemoveTower;
+        TowerRemove.OnImproveTower -= TowerRemove_OnImproveTower;
         SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         Spawner.OnVictory -= Spawner_OnVictory;
-        Platform.OnRemoveTower -= Platform_OnRemoveTower;
     }
 
     private void Start()
@@ -75,15 +78,19 @@ public class LevelManager : MonoBehaviour
 
     private void TowerSelection_OnLocateTower(TowerData data)
     {
-        if (_gold >= data.initialCost)
-        {
+        if (_gold >= data.ImproveCost)
             SubstractGold(data.initialCost);
-        }
     }
 
-    private void Platform_OnRemoveTower(TowerData data)
+    private void TowerRemove_OnRemoveTower(TowerData data)
     {
-        AddGold(Mathf.RoundToInt(data.removeCost));
+        AddGold(Mathf.RoundToInt(data.RemoveCost));
+    }
+
+    private void TowerRemove_OnImproveTower(TowerData data)
+    {
+        if (_gold >= data.ImproveCost)
+            SubstractGold(data.ImproveCost);
     }
 
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

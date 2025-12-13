@@ -15,8 +15,15 @@ MonoBehaviour:
   damage: 1
   range: 1.5
   shootInterval: 0.1
-  projectilSpeed: 10
+  projectilSpeed: 2
   projectilDuration: 2
   initialCost: 30
+  sellPercentage: 0.7
+  improvePercentage: 0.15
+  damageMultiplierBase: 0.1
+  rangeMultiplierBase: 0.1
+  shootIntervalMultiplierBase: 0.1
   sprite: {fileID: -1976463615, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
   prefab: {fileID: 9199482504335050928, guid: 10ac1405af938b6489eda9fe43e6108b, type: 3}
+  elitePrefab: {fileID: 9199482504335050928, guid: a457ad4eafa51a24da057c92fbae8e3e,
+    type: 3}

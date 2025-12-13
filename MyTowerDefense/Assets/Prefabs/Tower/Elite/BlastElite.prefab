@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 6898213166204721467}
   - component: {fileID: 3064497041137139834}
   - component: {fileID: 1444058817312708524}
-  - component: {fileID: 8653847827728064278}
   - component: {fileID: 1645566669952422891}
+  - component: {fileID: 1266501829343345471}
   m_Layer: 0
-  m_Name: BlastTower
+  m_Name: BlastElite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b5a16614d15714eb2596fe54fd96b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  data: {fileID: 11400000, guid: 87b2f945eb2b59d4ca6c81b3921f8039, type: 2}
+  data: {fileID: 11400000, guid: 356f1d098050bab4fb020daa0af107b7, type: 2}
 --- !u!212 &1444058817312708524
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ SpriteRenderer:
   m_SortingLayerID: -44025399
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1268003540, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
+  m_Sprite: {fileID: 1088587463, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,7 +106,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &8653847827728064278
+--- !u!114 &1645566669952422891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9199482504335050928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa5e01500089e14a9729d605c5bddd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
+  prefab: {fileID: 2233156549943718574, guid: 8ca1713918fe9c54fbbbfb25ca64ef14, type: 3}
+  poolSize: 5
+--- !u!58 &1266501829343345471
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,19 +154,5 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.0001
---- !u!114 &1645566669952422891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9199482504335050928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baa5e01500089e14a9729d605c5bddd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
-  prefab: {fileID: 2233156549943718574, guid: 8ca1713918fe9c54fbbbfb25ca64ef14, type: 3}
-  poolSize: 5
+  m_Offset: {x: 0, y: 0.3}
+  m_Radius: 0.335

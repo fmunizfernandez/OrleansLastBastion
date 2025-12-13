@@ -6,16 +6,19 @@ public class Platform : MonoBehaviour
 {
     public static event Action<Platform> OnPlatformClicked;
     public static event Action<Platform> OnPlatformRemoveClicked;
-    public static event Action<TowerData> OnRemoveTower;
 
     [SerializeField] private LayerMask platformLayerMask;
 
     public bool HasTower => _towerCreated != null;
 
     private GameObject _towerCreated = null;
-    private TowerData _dataActive = null;
+    private TowerData _activeTowerData = null;
+    private bool _endUpgrades = false;
+    private int _upgradeCount=0;
 
-    public TowerData DataActive => _dataActive;
+    public TowerData ActiveTowerData => _activeTowerData;
+    public bool EndUpgrades=> _endUpgrades;
+    public int Upgrade => _upgradeCount;
 
     public static bool IsTowerPanelOpened { get; set; } = false;
     public static bool IsTowerRemovePanelOpened { get; set; } = false;
@@ -51,13 +54,38 @@ public class Platform : MonoBehaviour
     public void LocateTower(TowerData data)
     {
         _towerCreated = Instantiate(data.prefab, transform.position, Quaternion.identity, transform);
-        _dataActive = data;
+        _activeTowerData = data;
+        _endUpgrades = _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
+
+        var tower = _towerCreated.GetComponent<Tower>();
+        tower.SetUpgrade(_upgradeCount);
     }
 
     public void RemoveTower()
     {
+        Destroy();
+        _upgradeCount = 0;
+    }
+
+    internal void ImproveTower(TowerData data)
+    {
+        Destroy();
+
+        _towerCreated = Instantiate(data.elitePrefab, transform.position, Quaternion.identity, transform);
+        _activeTowerData = data;
+        _upgradeCount++;
+        _endUpgrades = _upgradeCount>=LevelManager.Instance.MaxUpgradeNo;
+
+        var tower = _towerCreated.GetComponent<Tower>();
+        tower.SetUpgrade(_upgradeCount);
+    }
+
+    private void Destroy()
+    {
         Destroy(_towerCreated);
-        OnRemoveTower?.Invoke(_dataActive);
-        _dataActive = null;
+
+        _towerCreated = null;
+        _activeTowerData = null;
+        _endUpgrades = false;
     }
 }

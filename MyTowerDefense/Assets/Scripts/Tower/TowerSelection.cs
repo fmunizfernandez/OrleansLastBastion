@@ -5,23 +5,23 @@ using UnityEngine.UI;
 
 public class TowerSelection : MonoBehaviour
 {
-    [SerializeField] private Image towerImage;
-    [SerializeField] private TMP_Text costText;
-    [SerializeField] private TowerData data;
-
     public static event Action<TowerData> OnLocateTower;
 
-    private void OnEnable()
+    [SerializeField] private Image towerImage;
+    [SerializeField] private TMP_Text costText;
+
+    private TowerData _towerData;
+
+    public void Inizialite(TowerData data)
     {
+        _towerData = data;
+
         towerImage.sprite = data.sprite;
         costText.text = data.initialCost.ToString();
     }
 
-    public void LocateTower() 
+    public void LocateTower()
     {
-        if (LevelManager.Instance.Gold >= data.initialCost) 
-        {
-            OnLocateTower?.Invoke(data);
-        }
+        OnLocateTower?.Invoke(_towerData);
     }
 }
