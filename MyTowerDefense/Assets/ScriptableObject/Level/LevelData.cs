@@ -6,7 +6,7 @@ public class LevelData : ScriptableObject
     public string levelName;
     public int levelNumber;
     public int wavesNumber;
-    public float increaseResources;
-    public float increaseLifes;
+    [Range(0f, 1f)] public float increaseResources;
+    [Range(0f, 1f)] public float increaseLifes;
     public int upgradeNo;
 }

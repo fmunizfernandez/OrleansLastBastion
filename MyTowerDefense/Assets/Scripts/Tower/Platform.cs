@@ -14,10 +14,10 @@ public class Platform : MonoBehaviour
     private GameObject _towerCreated = null;
     private TowerData _activeTowerData = null;
     private bool _endUpgrades = false;
-    private int _upgradeCount=0;
+    private int _upgradeCount;
 
     public TowerData ActiveTowerData => _activeTowerData;
-    public bool EndUpgrades=> _endUpgrades;
+    public bool EndUpgrades => _endUpgrades;
     public int Upgrade => _upgradeCount;
 
     public static bool IsTowerPanelOpened { get; set; } = false;
@@ -53,12 +53,9 @@ public class Platform : MonoBehaviour
 
     public void LocateTower(TowerData data)
     {
-        _towerCreated = Instantiate(data.prefab, transform.position, Quaternion.identity, transform);
-        _activeTowerData = data;
+        _upgradeCount = 0;
+        CreateTower(data,_upgradeCount);
         _endUpgrades = _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
-
-        var tower = _towerCreated.GetComponent<Tower>();
-        tower.SetUpgrade(_upgradeCount);
     }
 
     public void RemoveTower()
@@ -67,17 +64,13 @@ public class Platform : MonoBehaviour
         _upgradeCount = 0;
     }
 
-    internal void ImproveTower(TowerData data)
+    public void ImproveTower(TowerData data)
     {
         Destroy();
 
-        _towerCreated = Instantiate(data.elitePrefab, transform.position, Quaternion.identity, transform);
-        _activeTowerData = data;
         _upgradeCount++;
-        _endUpgrades = _upgradeCount>=LevelManager.Instance.MaxUpgradeNo;
-
-        var tower = _towerCreated.GetComponent<Tower>();
-        tower.SetUpgrade(_upgradeCount);
+        CreateTower(data, _upgradeCount);
+        _endUpgrades = _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
     }
 
     private void Destroy()
@@ -87,5 +80,14 @@ public class Platform : MonoBehaviour
         _towerCreated = null;
         _activeTowerData = null;
         _endUpgrades = false;
+    }
+
+    private void CreateTower(TowerData data, int upgradeCount)
+    {
+        _towerCreated = Instantiate((upgradeCount > 0) ? data.elitePrefab : data.prefab, transform.position, Quaternion.identity, transform);
+        _activeTowerData = data;
+
+        var tower = _towerCreated.GetComponent<Tower>();
+        tower.Initialize(LevelManager.Instance.Data.levelNumber, upgradeCount);
     }
 }

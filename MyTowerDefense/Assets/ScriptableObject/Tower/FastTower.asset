@@ -15,7 +15,7 @@ MonoBehaviour:
   damage: 1
   range: 1.5
   shootInterval: 0.1
-  projectilSpeed: 2
+  projectilSpeed: 10
   projectilDuration: 2
   initialCost: 30
   sellPercentage: 0.7

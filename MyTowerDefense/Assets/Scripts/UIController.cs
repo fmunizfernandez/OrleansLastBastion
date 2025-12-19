@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,12 +10,17 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text waveText;
     [SerializeField] private TMP_Text liveText;
     [SerializeField] private TMP_Text goldText;
+    [SerializeField] private TMP_Text wavePanelText;
+    [SerializeField] private TMP_Text enemiesText;
+
 
     [SerializeField] private GameObject levelMenu;
     [SerializeField] private GameObject towerMenu;
     [SerializeField] private GameObject towerRemoveMenu;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject victoryPanel;
+    [SerializeField] private GameObject wavePanel;
+
 
     [SerializeField] private Button speedButtonx1;
     [SerializeField] private Button speedButtonx2;
@@ -37,9 +40,11 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject towerRemoveNoResourceText;
 
     [SerializeField] private TowerData[] towerMenuData;
-    private List<GameObject> _activeSelectors =new List<GameObject>();
+    private List<GameObject> _activeSelectors = new List<GameObject>();
 
     private Platform _activePlatform;
+
+    private bool _isEndGame;
 
     private const float SPEED_NORMAL = 1f;
     private const float SPEED_FAST = 2f;
@@ -53,12 +58,16 @@ public class UIController : MonoBehaviour
         victoryPanel.SetActive(false);
         towerMenuNoResourceText.SetActive(false);
         towerRemoveNoResourceText.SetActive(false);
+        wavePanel.SetActive(false);
     }
 
     private void OnEnable()
     {
         Spawner.OnWaveChanged += Spawner_OnWaveChanged;
         Spawner.OnVictory += Spawner_OnVictory;
+        Spawner.OnWaveCountdown += Spawner_OnWaveCountdown;
+        Spawner.OnWaveCountdownFinished += Spawner_OnWaveCountdownFinished;
+        Spawner.OnWaveEnemyProgress += Spawner_OnWaveEnemyProgress;
         LevelManager.OnEnemyEndsAlive += GameManager_OnEnemyEndsAlive;
         LevelManager.OnGoldChange += GameManager_OnGoldChange;
         Platform.OnPlatformClicked += Platform_OnPlatformClicked;
@@ -72,6 +81,9 @@ public class UIController : MonoBehaviour
     {
         Spawner.OnWaveChanged -= Spawner_OnWaveChanged;
         Spawner.OnVictory -= Spawner_OnVictory;
+        Spawner.OnWaveCountdown -= Spawner_OnWaveCountdown;
+        Spawner.OnWaveEnemyProgress -= Spawner_OnWaveEnemyProgress;
+        Spawner.OnWaveCountdownFinished -= Spawner_OnWaveCountdownFinished;
         LevelManager.OnEnemyEndsAlive -= GameManager_OnEnemyEndsAlive;
         LevelManager.OnGoldChange -= GameManager_OnGoldChange;
         Platform.OnPlatformClicked -= Platform_OnPlatformClicked;
@@ -90,27 +102,56 @@ public class UIController : MonoBehaviour
 
     private void GameManager_OnEnemyEndsAlive(int life)
     {
-        liveText.text = $"Live: {life}";
-
-        if (life <= 0) 
+        _isEndGame = life <= 0;
+        if (_isEndGame)
         {
             GameOver();
         }
+
+        liveText.text = $"Vida: {life}";
     }
 
     private void GameManager_OnGoldChange(int gold)
     {
-        goldText.text = $"Gold: {gold}";
+        goldText.text = $"Recursos: {gold}";
     }
 
     private void Spawner_OnWaveChanged(int currentWave)
     {
-        waveText.text = $"Wave: {currentWave}";
+        waveText.text = $"Oleada: {currentWave}";
     }
 
     private void Spawner_OnVictory()
     {
         Victory();
+    }
+
+    private void Spawner_OnWaveCountdownFinished()
+    {
+        if (wavePanel != null)
+            wavePanel.SetActive(false);
+    }
+
+    private void Spawner_OnWaveCountdown(float seconds)
+    {
+        if (!_isEndGame) 
+        {
+            
+            var sec = Mathf.CeilToInt(seconds);
+            var text = $"Próxima oleada en: {--sec}";
+
+            if (sec < 1)
+                text = "¡VAMOS!";
+            
+            wavePanelText.text = text;
+            wavePanel.SetActive(true);
+        }
+    }
+
+    private void Spawner_OnWaveEnemyProgress(int enemigosEliminados, int enemigosTotales)
+    {
+        if (_isEndGame) return;
+        enemiesText.text = $"Eliminados: {enemigosEliminados} / {enemigosTotales}";
     }
 
     private void Platform_OnPlatformClicked(Platform platform)
@@ -134,7 +175,7 @@ public class UIController : MonoBehaviour
                 _activePlatform.LocateTower(data);
                 CancelSelection();
             }
-            else 
+            else
             {
                 StartCoroutine(ShowNoResourceMessage(towerMenuNoResourceText));
             }
@@ -193,15 +234,15 @@ public class UIController : MonoBehaviour
         Platform.IsTowerPanelOpened = false;
     }
 
-    private void PopulateTowerSelectionUnits() 
+    private void PopulateTowerSelectionUnits()
     {
         DestroyActiveSelectors();
 
-        foreach (var towerData in towerMenuData) 
+        foreach (var towerData in towerMenuData)
         {
-            var gameObject = Instantiate(towerMenuPrefab,towerMenuContainer);
+            var gameObject = Instantiate(towerMenuPrefab, towerMenuContainer);
 
-            var towerSelectorObj= gameObject.GetComponent<TowerSelection>();
+            var towerSelectorObj = gameObject.GetComponent<TowerSelection>();
             towerSelectorObj.Inizialite(towerData);
 
             _activeSelectors.Add(gameObject);
@@ -247,7 +288,7 @@ public class UIController : MonoBehaviour
         var destroyButton = towerRemoveDestroyButton.GetComponent<TowerRemove>();
         destroyButton.InitRemove(_activePlatform.ActiveTowerData);
 
-        var eliteButton= towerRemoveEliteButton.GetComponent<TowerRemove>();
+        var eliteButton = towerRemoveEliteButton.GetComponent<TowerRemove>();
         eliteButton.InitImprove(_activePlatform.ActiveTowerData);
         towerRemoveEliteButton.SetActive(!_activePlatform.EndUpgrades);
     }
@@ -259,7 +300,7 @@ public class UIController : MonoBehaviour
     {
         SetGameSpeed(SPEED_NORMAL);
     }
-    
+
     public void SpeedDouble()
     {
         SetGameSpeed(SPEED_FAST);
@@ -356,20 +397,20 @@ public class UIController : MonoBehaviour
         gameplayGroup.blocksRaycasts = active;
     }
 
-    public void RestartLevel() 
+    public void RestartLevel()
     {
         LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
-        
+
         var currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
     }
 
-    public void QuitGame() 
+    public void QuitGame()
     {
         Application.Quit();
     }
 
-    public void MainMenu() 
+    public void MainMenu()
     {
         LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
         SceneManager.LoadScene("MainMenu");
@@ -379,21 +420,24 @@ public class UIController : MonoBehaviour
 
     #region Victory/Defeat
 
-    private void GameOver() 
+    private void GameOver()
     {
         LevelManager.Instance.SetGameSpeed(0f);
         gameOverPanel.SetActive(true);
+        wavePanel.SetActive(false);
         ManageActionButtons(false);
     }
 
-    private void Victory() 
+    private void Victory()
     {
+        _isEndGame = true;
         LevelManager.Instance.SetGameSpeed(0f);
         victoryPanel.SetActive(true);
+        wavePanel.SetActive(false);
         ManageActionButtons(false);
     }
-    
-    public void NextLevel() 
+
+    public void NextLevel()
     {
         SceneManager.LoadScene($"Level{GameManager.Instance.GetMaxUnlockedLevel()}");
     }

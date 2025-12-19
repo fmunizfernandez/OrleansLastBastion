@@ -5,14 +5,19 @@ using UnityEngine;
 [Serializable]
 public class EnemyPool
 {
-    public EnemyData enemyType;    
-    public ObjectPooler pool;      
+    public EnemyData enemyType;
+    public ObjectPooler pool;
 }
 
 public class Spawner : MonoBehaviour
 {
     public static event Action<int> OnWaveChanged;
     public static event Action OnVictory;
+
+    public static event Action<float> OnWaveCountdown;
+    public static event Action OnWaveCountdownFinished;
+
+    public static event Action<int, int> OnWaveEnemyProgress;
 
     [SerializeField] private EnemyPool[] enemyPools;
 
@@ -55,12 +60,18 @@ public class Spawner : MonoBehaviour
 
     void Update()
     {
+        if (_isVictory) return;
+
         if (_isFirstWave)
         {
             _firstWavecoolDown -= Time.deltaTime;
+
+            OnWaveCountdown?.Invoke(_firstWavecoolDown);
+
             if (_firstWavecoolDown <= 0f)
             {
                 NewWave();
+                OnWaveCountdownFinished?.Invoke();
                 _isFirstWave = false;
             }
             return;
@@ -69,8 +80,22 @@ public class Spawner : MonoBehaviour
         if (_isBetweenWaves)
         {
             _wavecoolDown -= Time.deltaTime;
+
+            OnWaveCountdown?.Invoke(Mathf.Max(0f, _wavecoolDown));
+
             if (_wavecoolDown <= 0f)
+            {
+                if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
+                {
+                    _isVictory = true;
+                    _isBetweenWaves = false;
+                    OnVictory?.Invoke();
+                    return;
+                }
+
                 NewWave();
+                OnWaveCountdownFinished?.Invoke();
+            }
         }
         else
         {
@@ -91,7 +116,7 @@ public class Spawner : MonoBehaviour
         }
 
         SpawnEnemy();
-       
+
         _spawnedInCurrentGroup++;
         _spawnCounter++;
         _spawnTimer = CurrentWave.SpawnInterval;
@@ -105,20 +130,10 @@ public class Spawner : MonoBehaviour
 
     private void NewWave()
     {
-        if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
-        {
-            if (!_isVictory)
-            {
-                _isVictory = true;
-                OnVictory?.Invoke();
-                return;
-            }
-        }
-
-        _currentWaveIndex = (_isFirstWave) ? _waveCounter : (_currentWaveIndex + 1) % waves.Length;
+        _currentWaveIndex = (_isFirstWave) ? _waveCounter : _currentWaveIndex + 1;
         _waveCounter++;
         OnWaveChanged?.Invoke(_waveCounter);
-        
+
         _spawnCounter = 0;
         _enemiesRemoved = 0;
         _spawnTimer = 0f;
@@ -126,29 +141,31 @@ public class Spawner : MonoBehaviour
         _spawnedInCurrentGroup = 0;
 
         _isBetweenWaves = false;
+        OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
     }
 
     private void SpawnEnemy()
     {
         var group = CurrentWave.EnemyGroupPerWave[_currentGroupIndex];
 
-        var pool = enemyPools.First(p => p.enemyType == group.enemyType).pool;
-        GameObject spawnedObject = pool.GetPooledObject();
+        var enemyPool = enemyPools.First(p => p.enemyType == group.enemyType).pool;
+        var spawnedObject = enemyPool.GetPooledObject();
         spawnedObject.transform.position = transform.position;
 
-        var healthMultiplier = 1f + (_waveCounter * 0.1f);
-        var enemy = spawnedObject.GetComponent<Enemy>();   
-        enemy.Initialize(healthMultiplier);
+        var enemy = spawnedObject.GetComponent<Enemy>();
+        enemy.Initialize(LevelManager.Instance.Data.levelNumber, _waveCounter);
         spawnedObject.SetActive(true);
     }
 
-    private void Enemy_OnEnemyReachEnd(EnemyData data)
+    private void Enemy_OnEnemyReachEnd(int damage)
     {
         _enemiesRemoved++;
+        OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
     }
 
     private void Enemy_OnEnemyDestroyed(Enemy enemy)
     {
         _enemiesRemoved++;
+        OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
     }
 }

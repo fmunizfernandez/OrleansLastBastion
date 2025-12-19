@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   damage: 2
   range: 1.8
-  shootInterval: 0.1
-  projectilSpeed: 1
+  shootInterval: 0.5
+  projectilSpeed: 5
   projectilDuration: 2
   initialCost: 25
   sellPercentage: 0.7

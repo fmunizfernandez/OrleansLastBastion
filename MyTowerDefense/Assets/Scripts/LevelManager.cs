@@ -65,9 +65,9 @@ public class LevelManager : MonoBehaviour
         OnGoldChange?.Invoke(_gold);
     }
 
-    private void Enemy_OnEnemyReachEnd(EnemyData data)
+    private void Enemy_OnEnemyReachEnd(int damage)
     {
-        _lives = Mathf.Max(0, _lives - data.Damage);
+        _lives = Mathf.Max(0, _lives - damage);
         OnEnemyEndsAlive?.Invoke(_lives);
     }
 
@@ -78,7 +78,7 @@ public class LevelManager : MonoBehaviour
 
     private void TowerSelection_OnLocateTower(TowerData data)
     {
-        if (_gold >= data.ImproveCost)
+        if (_gold >= data.initialCost)
             SubstractGold(data.initialCost);
     }
 
@@ -148,6 +148,5 @@ public class LevelManager : MonoBehaviour
     {
         var audiosource = Camera.main.GetComponent<AudioSource>();
         audiosource.mute = false;
-
     }
 }

@@ -12,7 +12,10 @@ public class Tower : MonoBehaviour
     private ObjectPooler _projectilePool;
 
     private float _shootTimer;
-    private int _upgradeCount = 0;
+    private int _upgradeCount;
+    public float _damage;
+    public float _range;
+    public float _shootInterval;
 
     private void OnEnable()
     {
@@ -26,32 +29,24 @@ public class Tower : MonoBehaviour
 
     private void Start()
     {
-        var range = data.range * (1 + data.GetRangeMultiplier(_upgradeCount));
-        var shootInterval = data.shootInterval * (1-data.GetShootIntervalMultiplier(_upgradeCount));
-
-        _circleCollider = GetComponent<CircleCollider2D>();
-        _circleCollider.radius = range / transform.localScale.x;
-
         _enemiesInRange = new List<Enemy>();
         _projectilePool = GetComponent<ObjectPooler>();
-        _shootTimer = shootInterval;
+        _shootTimer = _shootInterval;
     }
 
     private void Update()
     {
-        var shootInterval = data.shootInterval * (1-data.GetShootIntervalMultiplier(_upgradeCount));
-
         _shootTimer -= Time.deltaTime;
         if (_shootTimer <= 0)
         {
-            _shootTimer = shootInterval;
+            _shootTimer = _shootInterval;
             Shoot();
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, data.range);
+        Gizmos.DrawWireSphere(transform.position, _range);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -84,9 +79,7 @@ public class Tower : MonoBehaviour
             projectileObj.SetActive(true);
 
             var shootDirection = (_enemiesInRange.First().transform.position - transform.position).normalized;
-            var damage = data.damage * (1 + data.GetDamageMultiplier(_upgradeCount));
-
-            projectileObj.GetComponent<Projectile>().Shoot(damage, data.projectilSpeed, data.projectilDuration, shootDirection);
+            projectileObj.GetComponent<Projectile>().Shoot(_damage, data.projectilSpeed, data.projectilDuration, shootDirection);
         }
     }
 
@@ -95,8 +88,18 @@ public class Tower : MonoBehaviour
         _enemiesInRange.Remove(enemy);
     }
 
-    public void SetUpgrade(int upgradeCount)
+    public void Initialize(int levelFactor, int upgradeCount)
     {
+        var damageIncreasePercent = data.GetDamageMultiplier(levelFactor, upgradeCount);
+        var rangeIncreasePercent = data.GetRangeMultiplier(levelFactor, upgradeCount);
+        var shootIntervalIncreasePercent = data.GetShootIntervalMultiplier(levelFactor, upgradeCount);
+
+        _damage = data.damage * damageIncreasePercent;
+        _range = data.range * rangeIncreasePercent;
+        _shootInterval = data.shootInterval * shootIntervalIncreasePercent;
         _upgradeCount = upgradeCount;
+
+        _circleCollider = GetComponent<CircleCollider2D>();
+        _circleCollider.radius = _range / transform.localScale.x;
     }
 }
