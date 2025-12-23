@@ -77,32 +77,27 @@ public class MainMenuController : MonoBehaviour
 
     public void Level1() 
     {
-        Level(1);
+        SceneManager.LoadScene($"2.Level1");
     }
 
     public void Level2()
     {
-        Level(2);
+        SceneManager.LoadScene($"3.Level2");
     }
 
     public void Level3()
     {
-        Level(3);
+        SceneManager.LoadScene($"4.Level3");
     }
 
     public void Level4()
     {
-        Level(4);
+        SceneManager.LoadScene($"5.Level4");
     }
 
     public void Level5()
     {
-        Level(5);
-    }
-
-    private void Level(int level)
-    {
-        SceneManager.LoadScene($"Level{level}");
+        SceneManager.LoadScene($"6.Level5");
     }
 
     #endregion

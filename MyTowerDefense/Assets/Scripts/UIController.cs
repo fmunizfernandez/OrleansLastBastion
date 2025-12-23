@@ -413,7 +413,7 @@ public class UIController : MonoBehaviour
     public void MainMenu()
     {
         LevelManager.Instance.SetGameSpeed(SPEED_NORMAL);
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("1.MainMenu");
     }
 
     #endregion
