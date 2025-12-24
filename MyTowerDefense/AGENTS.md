@@ -4,5 +4,5 @@
 - Active game object:
   - Name: UICanvas
   - Tag: Untagged
-  - Layer: UI
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

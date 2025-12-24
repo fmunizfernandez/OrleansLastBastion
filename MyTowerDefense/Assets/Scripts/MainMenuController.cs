@@ -32,7 +32,7 @@ public class MainMenuController : MonoBehaviour
     
     public void Continue() 
     {
-        GenerateButtons();
+        //GenerateButtons();
         mainMenuPanel.SetActive(false);
         levelPanel.SetActive(true);
     }
@@ -75,7 +75,7 @@ public class MainMenuController : MonoBehaviour
         ManageContinueVisibillity();
     }
 
-    public void Level1() 
+    public void Level1()
     {
         SceneManager.LoadScene($"2.Level1");
     }
