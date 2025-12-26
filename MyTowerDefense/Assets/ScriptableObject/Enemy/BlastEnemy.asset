@@ -15,4 +15,8 @@ MonoBehaviour:
   Live: 50
   Speed: 1
   Damage: 5
-  GoldForDead: 5
+  GoldForDead: 12
+  damageMultiplierBase: 0.1
+  resistanceMultiplierBase: 0.1
+  resistanceMultiplierPerWaveBase: 0.1
+  speedMultiplierBase: 0.1

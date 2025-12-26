@@ -25,9 +25,9 @@ public class EnemyData : ScriptableObject
 
     public float GetResistanceMultiplier(int level,int wave)
     {
+        var levelMult = 1f + ((level-1) * resistanceMultiplierBase);
         var waveMult = 1f+ Mathf.Log(wave) * resistanceMultiplierBase;
-        var levelMult = 1f + Mathf.Log(level) * resistanceMultiplierBase;
 
-        return waveMult * levelMult;
+        return levelMult * waveMult;
     }
 }

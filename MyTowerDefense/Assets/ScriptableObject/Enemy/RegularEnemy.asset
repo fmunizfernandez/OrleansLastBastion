@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b436d52fd3a9cc04490eb5d01e9d9b82, type: 3}
   m_Name: RegularEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  Live: 3
+  Live: 15
   Speed: 2
   Damage: 2
-  GoldForDead: 2
+  GoldForDead: 3
+  damageMultiplierBase: 0.1
+  resistanceMultiplierBase: 0.1
+  resistanceMultiplierPerWaveBase: 0.1
+  speedMultiplierBase: 0.1

@@ -1069,7 +1069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: d312e9efd92bb2349a2c03118762aa50, type: 3}
-  poolSize: 50
+  poolSize: 10
 --- !u!4 &284462885
 Transform:
   m_ObjectHideFlags: 0
@@ -4975,7 +4975,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: fbfea41e80d98a642a259715b5e12060, type: 3}
-  poolSize: 50
+  poolSize: 10
 --- !u!1001 &1269434131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5180,7 +5180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPooler
   prefab: {fileID: 1284615503851453046, guid: 1dd36ee0c66d0ae4ab88a13e4af508ed, type: 3}
-  poolSize: 50
+  poolSize: 10
 --- !u!4 &1270948035
 Transform:
   m_ObjectHideFlags: 0
@@ -5599,9 +5599,16 @@ MonoBehaviour:
   - enemyType: {fileID: 11400000, guid: b48e79496de596941a714df43c74e3b6, type: 2}
     pool: {fileID: 284462884}
   waves:
-  - {fileID: 11400000, guid: b0ae42da1fc653d4bbe034d0cfcc38b4, type: 2}
-  - {fileID: 11400000, guid: 59d40d9a0e15c13428f557e4a9d25f21, type: 2}
-  - {fileID: 11400000, guid: 4c1523be2a861d94ab09b2b84f8c34ce, type: 2}
+  - {fileID: 11400000, guid: 20d278d20194cf3489b280e276f1e69f, type: 2}
+  - {fileID: 11400000, guid: e6c6ac68202d44641a87fbecc749646e, type: 2}
+  - {fileID: 11400000, guid: 473f2b5eaa6f2154d8544e8117f82ec2, type: 2}
+  - {fileID: 11400000, guid: 02a7b93bc1c68b449af5176adee03242, type: 2}
+  - {fileID: 11400000, guid: 277e1656c57ba6d45933ef7dd3acc681, type: 2}
+  - {fileID: 11400000, guid: 413087273bbff68489285fa6474da54b, type: 2}
+  - {fileID: 11400000, guid: b4409728e4ccf0b4bbe716d5465f5d2f, type: 2}
+  - {fileID: 11400000, guid: bd8c1a9a616a57f4dae6de64e04f86e9, type: 2}
+  - {fileID: 11400000, guid: 4a89ed6d2f851ce4ba753d25611eec9a, type: 2}
+  - {fileID: 11400000, guid: 0d38ed36b321f1e489a9e777171632f4, type: 2}
 --- !u!1 &1370884137
 GameObject:
   m_ObjectHideFlags: 0

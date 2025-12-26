@@ -134,15 +134,15 @@ public class UIController : MonoBehaviour
 
     private void Spawner_OnWaveCountdown(float seconds)
     {
-        if (!_isEndGame) 
+        if (!_isEndGame)
         {
-            
+
             var sec = Mathf.CeilToInt(seconds);
             var text = $"Próxima oleada en: {--sec}";
 
             if (sec < 1)
                 text = "¡VAMOS!";
-            
+
             wavePanelText.text = text;
             wavePanel.SetActive(true);
         }
@@ -439,7 +439,7 @@ public class UIController : MonoBehaviour
 
     public void NextLevel()
     {
-        SceneManager.LoadScene($"Level{GameManager.Instance.GetMaxUnlockedLevel()}");
+        SceneManager.LoadScene($"{GameManager.Instance.GetMaxUnlockedLevel() + 1}.Level{GameManager.Instance.GetMaxUnlockedLevel()}");
     }
 
     #endregion

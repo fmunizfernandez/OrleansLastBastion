@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f440ba2a60fb7478c5487f22c3e953, type: 3}
   m_Name: NormalTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  damage: 2
-  range: 1.8
-  shootInterval: 0.5
-  projectilSpeed: 5
+  damage: 3
+  range: 2.5
+  shootInterval: 0.4
+  projectilSpeed: 10
   projectilDuration: 2
-  initialCost: 25
+  initialCost: 30
   sellPercentage: 0.7
-  improvePercentage: 0.15
+  improvePercentage: 0.55
   damageMultiplierBase: 0.1
   rangeMultiplierBase: 0.1
   shootIntervalMultiplierBase: 0.1
+  towerType: 1
   sprite: {fileID: 335540, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
   prefab: {fileID: 9199482504335050928, guid: 5cf9ffa8bfb7f4c41a9910423fdb95f7, type: 3}
   elitePrefab: {fileID: 9199482504335050928, guid: 8dbb999ae7dc4314f859f89b5a7bc158,

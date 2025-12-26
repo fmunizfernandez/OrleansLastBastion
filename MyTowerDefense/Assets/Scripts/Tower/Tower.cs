@@ -12,10 +12,9 @@ public class Tower : MonoBehaviour
     private ObjectPooler _projectilePool;
 
     private float _shootTimer;
-    private int _upgradeCount;
-    public float _damage;
-    public float _range;
-    public float _shootInterval;
+    private float _damage;
+    private float _range;
+    private float _shootInterval;
 
     private void OnEnable()
     {
@@ -94,10 +93,12 @@ public class Tower : MonoBehaviour
         var rangeIncreasePercent = data.GetRangeMultiplier(levelFactor, upgradeCount);
         var shootIntervalIncreasePercent = data.GetShootIntervalMultiplier(levelFactor, upgradeCount);
 
-        _damage = data.damage * damageIncreasePercent;
         _range = data.range * rangeIncreasePercent;
+        _damage = data.damage * damageIncreasePercent;
         _shootInterval = data.shootInterval * shootIntervalIncreasePercent;
-        _upgradeCount = upgradeCount;
+
+        Debug.LogWarning($"Basic Values Tower: Damage: {data.damage}, range: {data.range}, Shoot Interval: {data.shootInterval}");
+        Debug.LogWarning($"New Tower: Damage: {_damage}, range: {_range}, Shoot Interval: {_shootInterval}");
 
         _circleCollider = GetComponent<CircleCollider2D>();
         _circleCollider.radius = _range / transform.localScale.x;

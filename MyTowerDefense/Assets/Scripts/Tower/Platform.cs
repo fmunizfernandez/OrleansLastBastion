@@ -13,12 +13,10 @@ public class Platform : MonoBehaviour
 
     private GameObject _towerCreated = null;
     private TowerData _activeTowerData = null;
-    private bool _endUpgrades = false;
     private int _upgradeCount;
 
     public TowerData ActiveTowerData => _activeTowerData;
-    public bool EndUpgrades => _endUpgrades;
-    public int Upgrade => _upgradeCount;
+    public bool EndUpgrades => _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
 
     public static bool IsTowerPanelOpened { get; set; } = false;
     public static bool IsTowerRemovePanelOpened { get; set; } = false;
@@ -55,31 +53,28 @@ public class Platform : MonoBehaviour
     {
         _upgradeCount = 0;
         CreateTower(data,_upgradeCount);
-        _endUpgrades = _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
     }
 
     public void RemoveTower()
     {
-        Destroy();
+        DestroyTower();
         _upgradeCount = 0;
     }
 
     public void ImproveTower(TowerData data)
     {
-        Destroy();
+        DestroyTower();
 
         _upgradeCount++;
         CreateTower(data, _upgradeCount);
-        _endUpgrades = _upgradeCount >= LevelManager.Instance.MaxUpgradeNo;
     }
 
-    private void Destroy()
+    private void DestroyTower()
     {
         Destroy(_towerCreated);
 
         _towerCreated = null;
         _activeTowerData = null;
-        _endUpgrades = false;
     }
 
     private void CreateTower(TowerData data, int upgradeCount)

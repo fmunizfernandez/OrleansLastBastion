@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4f440ba2a60fb7478c5487f22c3e953, type: 3}
   m_Name: BlastTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  damage: 5
-  range: 2.5
-  shootInterval: 5
-  projectilSpeed: 1
+  damage: 6
+  range: 5
+  shootInterval: 1.8
+  projectilSpeed: 10
   projectilDuration: 2
   initialCost: 100
   sellPercentage: 0.7
-  improvePercentage: 0.15
-  damageMultiplierBase: 0.1
-  rangeMultiplierBase: 0.1
+  improvePercentage: 0.55
+  damageMultiplierBase: 0.2
+  rangeMultiplierBase: 0
   shootIntervalMultiplierBase: 0.1
+  towerType: 3
   sprite: {fileID: 291998798, guid: af1bf67bf3c45674ca211de5e0b6ec5b, type: 3}
   prefab: {fileID: 9199482504335050928, guid: 9305bf105291cc8479ea75c9a857a6eb, type: 3}
   elitePrefab: {fileID: 9199482504335050928, guid: 5fb584249f56b29448242b2e97518f12,

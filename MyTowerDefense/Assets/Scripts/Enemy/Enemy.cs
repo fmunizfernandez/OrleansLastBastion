@@ -87,6 +87,9 @@ public class Enemy : MonoBehaviour
         _damage = data.Damage * damageIncreasePercent;
         _lives = data.Live * healthIncreasePercent;
 
+        Debug.LogWarning($"Basic Values Enemy: Speed: {data.Speed}, Damage: {data.Damage}, Lives: {data.Live}");
+        Debug.LogWarning($"New Tower: Speed: {_speed}, Damage: {_damage}, Lives: {_lives}");
+
         _maxLivePerWave = _lives;
         
         UpdateHealthBarScale();

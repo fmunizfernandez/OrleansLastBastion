@@ -16,6 +16,7 @@ public class TowerData : ScriptableObject
     [Range(0f, 1f)] public float rangeMultiplierBase = 0.10f;
     [Range(0f, 1f)] public float shootIntervalMultiplierBase = 0.50f;
 
+    public TowerType towerType;
     public Sprite sprite;
     public GameObject prefab;
     public GameObject elitePrefab;
@@ -23,11 +24,10 @@ public class TowerData : ScriptableObject
     public int RemoveCost => Mathf.RoundToInt(initialCost * sellPercentage);
     public int ImproveCost => Mathf.RoundToInt(initialCost * (1 + improvePercentage));
 
-    //TODO: Mejorar el multiplier
     public float GetDamageMultiplier(int levelFactor, int upgradeCount)
     {
         var levelMultiplier = damageMultiplierBase * Mathf.Log(levelFactor);
-        var improveMultiplier = damageMultiplierBase * Mathf.Log(upgradeCount + 1);
+        var improveMultiplier = damageMultiplierBase * upgradeCount;
 
         return (1f + levelMultiplier) * (1f + improveMultiplier);
     }
@@ -35,7 +35,7 @@ public class TowerData : ScriptableObject
     public float GetRangeMultiplier(int levelFactor, int upgradeCount)
     {
         var levelMultiplier = rangeMultiplierBase * Mathf.Log(levelFactor);
-        var improveMultiplier = rangeMultiplierBase * Mathf.Log(upgradeCount + 1);
+        var improveMultiplier = rangeMultiplierBase * upgradeCount;
 
         return (1f + levelMultiplier) * (1f + improveMultiplier);
     }
@@ -43,7 +43,7 @@ public class TowerData : ScriptableObject
     public float GetShootIntervalMultiplier(int levelFactor, int upgradeCount)
     {
         var levelMultiplier = shootIntervalMultiplierBase * Mathf.Log(levelFactor);
-        var improveMultiplier = shootIntervalMultiplierBase * Mathf.Log(upgradeCount + 1);
+        var improveMultiplier = shootIntervalMultiplierBase * upgradeCount;
 
         return (1f + levelMultiplier) * (1f + improveMultiplier);
     }

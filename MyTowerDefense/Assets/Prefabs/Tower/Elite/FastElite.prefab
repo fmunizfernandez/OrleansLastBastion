@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b5a16614d15714eb2596fe54fd96b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  data: {fileID: 11400000, guid: 356f1d098050bab4fb020daa0af107b7, type: 2}
+  data: {fileID: 11400000, guid: 421464720ed490045a309aaf81e49842, type: 2}
 --- !u!212 &1444058817312708524
 SpriteRenderer:
   m_ObjectHideFlags: 0

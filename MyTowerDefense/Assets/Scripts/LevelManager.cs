@@ -94,8 +94,8 @@ public class LevelManager : MonoBehaviour
 
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        _initialGold = Mathf.RoundToInt(GameManager.Instance.Gold * (1 + Data.increaseResources));
-        _lives = Mathf.RoundToInt(GameManager.Instance.Lives * (1 + Data.increaseLifes));
+        _initialGold = Mathf.RoundToInt(GameManager.Instance.Gold * data.GetResouceMultiplier());
+        _lives = Mathf.RoundToInt(GameManager.Instance.Lives * data.GetLifeMultiplier());
         _gameSpeed = GameManager.Instance.Speed;
     }
 

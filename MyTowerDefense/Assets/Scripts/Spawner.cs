@@ -26,22 +26,27 @@ public class Spawner : MonoBehaviour
     private WaveData CurrentWave => waves[_currentWaveIndex];
     private int _currentWaveIndex = 0;
     private float _spawnTimer = 0;
-    private int _waveCounter = 0;
+    private int _waveCounter;
     private int _spawnCounter;
     private int _enemiesRemoved;
     private float _timeBetweenWaves = 7.5f;
     private float _wavecoolDown;
     private float _firstWavecoolDown;
-    private bool _isBetweenWaves = false;
-    private bool _isFirstWave = true;
 
     private int _currentGroupIndex;
     private int _spawnedInCurrentGroup;
 
-    private bool _isVictory = false;
+    private bool _isBetweenWaves;
+    private bool _isFirstWave;
+    private bool _isVictory;
 
     private void Start()
     {
+        _isFirstWave = true;
+        _isBetweenWaves = false;
+        _isVictory = false;
+        _waveCounter = 0;
+
         _firstWavecoolDown = _timeBetweenWaves;
         OnWaveChanged?.Invoke(_waveCounter + 1);
     }
@@ -79,20 +84,20 @@ public class Spawner : MonoBehaviour
 
         if (_isBetweenWaves)
         {
+            if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
+            {
+                _isVictory = true;
+                _isBetweenWaves = false;
+                OnVictory?.Invoke();
+                return;
+            }
+
             _wavecoolDown -= Time.deltaTime;
 
             OnWaveCountdown?.Invoke(Mathf.Max(0f, _wavecoolDown));
 
             if (_wavecoolDown <= 0f)
             {
-                if (_waveCounter + 1 > LevelManager.Instance.Data.wavesNumber)
-                {
-                    _isVictory = true;
-                    _isBetweenWaves = false;
-                    OnVictory?.Invoke();
-                    return;
-                }
-
                 NewWave();
                 OnWaveCountdownFinished?.Invoke();
             }

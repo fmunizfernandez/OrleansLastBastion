@@ -6016,9 +6016,16 @@ MonoBehaviour:
   - enemyType: {fileID: 11400000, guid: b48e79496de596941a714df43c74e3b6, type: 2}
     pool: {fileID: 284462884}
   waves:
-  - {fileID: 11400000, guid: b0ae42da1fc653d4bbe034d0cfcc38b4, type: 2}
-  - {fileID: 11400000, guid: 59d40d9a0e15c13428f557e4a9d25f21, type: 2}
-  - {fileID: 11400000, guid: 4c1523be2a861d94ab09b2b84f8c34ce, type: 2}
+  - {fileID: 11400000, guid: c0fcfe880acd4f2458e6155188fec1fd, type: 2}
+  - {fileID: 11400000, guid: 9770cd8397937294691d1e5cfb1ebe0f, type: 2}
+  - {fileID: 11400000, guid: 9f937f64c38227749a37cf677c851045, type: 2}
+  - {fileID: 11400000, guid: 1aa22c0244d9bd044a2cb2cc25bbce9f, type: 2}
+  - {fileID: 11400000, guid: 14e3d618f9486cd4fae6b661f8a5c9a6, type: 2}
+  - {fileID: 11400000, guid: df09fbab0ea05ad479f3352e099af2c4, type: 2}
+  - {fileID: 11400000, guid: 95d0198756b6919498edc09399a3b188, type: 2}
+  - {fileID: 11400000, guid: 210c89833b7b5744eb29c138ee0e47a0, type: 2}
+  - {fileID: 11400000, guid: 551473d2dd9af024daa5e55447971203, type: 2}
+  - {fileID: 11400000, guid: b7464f75493b3ea41b1bb8f90477d014, type: 2}
 --- !u!1 &1370884137
 GameObject:
   m_ObjectHideFlags: 0
@@ -11400,7 +11407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9987c74a0f22a674c90cdbd1baa01e7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  data: {fileID: 11400000, guid: 509ef519c44828243b18d66f5af06131, type: 2}
+  data: {fileID: 11400000, guid: 1ae3dadbe4a2b434a853c09e64b55e8f, type: 2}
 --- !u!1001 &2101652995
 PrefabInstance:
   m_ObjectHideFlags: 0
