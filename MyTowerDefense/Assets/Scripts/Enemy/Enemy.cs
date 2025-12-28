@@ -15,11 +15,14 @@ public class Enemy : MonoBehaviour
     private float _speed;
     private float _damage;
 
+    private bool _despawnedThisLife;
+    private enum DespawnReason { ReachEnd, Destroyed }
+
     [SerializeField]
     private Transform healthBar;
     private Vector3 _healthBarOriginalScale;
 
-    public static event Action<int> OnEnemyReachEnd;
+    public static event Action<Enemy, int> OnEnemyReachEnd;
     public static event Action<Enemy> OnEnemyDestroyed;
 
     private void Awake()
@@ -31,9 +34,19 @@ public class Enemy : MonoBehaviour
     private void OnEnable()
     {
         _currentWaypoint = 0;
+        _despawnedThisLife = false;
 
         transform.position = _currentPath.GetPosition(_currentWaypoint);
         _targetPosition = _currentPath.GetPosition(_currentWaypoint);
+    }
+    
+    private void OnDisable()
+    {
+        if (_despawnedThisLife) 
+            return;
+
+        _despawnedThisLife = true;
+        OnEnemyDestroyed?.Invoke(this);
     }
 
     void Update()
@@ -50,8 +63,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                OnEnemyReachEnd?.Invoke(Mathf.CeilToInt(_damage));
-                gameObject.SetActive(false);
+                Despawn(DespawnReason.ReachEnd);
             }
         }
     }
@@ -61,21 +73,34 @@ public class Enemy : MonoBehaviour
         _lives = Mathf.Max(0, _lives - damage);
         if (_lives <= 0)
         {
-            OnEnemyDestroyed?.Invoke(this);
-            gameObject.SetActive(false);
+            Despawn(DespawnReason.Destroyed);
             return;
         }
 
         UpdateHealthBarScale();
     }
 
-    private void UpdateHealthBarScale()
+    private void Despawn(DespawnReason reason)
     {
-        var floatPercent = _lives / _maxLivePerWave;
-        var scale = _healthBarOriginalScale;
-        scale.x = _healthBarOriginalScale.x * floatPercent;
-        healthBar.localScale = scale;
+        if (_despawnedThisLife) 
+            return;
+        
+        _despawnedThisLife = true;
+
+        switch (reason)
+        {
+            case DespawnReason.ReachEnd:
+                OnEnemyReachEnd?.Invoke(this, Mathf.CeilToInt(_damage));
+                break;
+            case DespawnReason.Destroyed:
+                OnEnemyDestroyed?.Invoke(this);
+                break;
+        }
+
+        gameObject.SetActive(false);
     }
+
+
 
     public void Initialize(int levelFactor, int waveFactor)
     {
@@ -91,7 +116,15 @@ public class Enemy : MonoBehaviour
         Debug.LogWarning($"New Tower: Speed: {_speed}, Damage: {_damage}, Lives: {_lives}");
 
         _maxLivePerWave = _lives;
-        
+
         UpdateHealthBarScale();
+    }
+
+    private void UpdateHealthBarScale()
+    {
+        var floatPercent = _lives / _maxLivePerWave;
+        var scale = _healthBarOriginalScale;
+        scale.x = _healthBarOriginalScale.x * floatPercent;
+        healthBar.localScale = scale;
     }
 }

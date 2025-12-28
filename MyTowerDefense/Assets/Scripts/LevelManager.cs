@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
         OnGoldChange?.Invoke(_gold);
     }
 
-    private void Enemy_OnEnemyReachEnd(int damage)
+    private void Enemy_OnEnemyReachEnd(Enemy enemy, int damage)
     {
         _lives = Mathf.Max(0, _lives - damage);
         OnEnemyEndsAlive?.Invoke(_lives);

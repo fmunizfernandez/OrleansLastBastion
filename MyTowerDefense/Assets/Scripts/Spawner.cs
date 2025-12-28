@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ public class Spawner : MonoBehaviour
     private int _waveCounter;
     private int _spawnCounter;
     private int _enemiesRemoved;
+    private int _aliveEnemies;
     private float _timeBetweenWaves = 7.5f;
     private float _wavecoolDown;
     private float _firstWavecoolDown;
@@ -46,6 +48,7 @@ public class Spawner : MonoBehaviour
         _isBetweenWaves = false;
         _isVictory = false;
         _waveCounter = 0;
+        _aliveEnemies = 0;
 
         _firstWavecoolDown = _timeBetweenWaves;
         OnWaveChanged?.Invoke(_waveCounter + 1);
@@ -107,7 +110,7 @@ public class Spawner : MonoBehaviour
             _spawnTimer -= Time.deltaTime;
             if (_spawnTimer <= 0 && _spawnCounter < CurrentWave.EnemiesPerWave)
                 GetNewEnemyToSpawn();
-            else if (_spawnCounter >= CurrentWave.EnemiesPerWave && _enemiesRemoved >= CurrentWave.EnemiesPerWave)
+            else if (_spawnCounter >= CurrentWave.EnemiesPerWave && _aliveEnemies <= 0)
                 EndWave();
         }
     }
@@ -145,6 +148,8 @@ public class Spawner : MonoBehaviour
         _currentGroupIndex = 0;
         _spawnedInCurrentGroup = 0;
 
+        _aliveEnemies = 0;
+
         _isBetweenWaves = false;
         OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
     }
@@ -159,17 +164,25 @@ public class Spawner : MonoBehaviour
 
         var enemy = spawnedObject.GetComponent<Enemy>();
         enemy.Initialize(LevelManager.Instance.Data.levelNumber, _waveCounter);
+
+        _aliveEnemies++;
         spawnedObject.SetActive(true);
     }
 
-    private void Enemy_OnEnemyReachEnd(int damage)
+    private void Enemy_OnEnemyReachEnd(Enemy enemy, int damage)
     {
-        _enemiesRemoved++;
-        OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
+        RegisterEnemyRemoved(enemy);
     }
 
     private void Enemy_OnEnemyDestroyed(Enemy enemy)
     {
+        RegisterEnemyRemoved(enemy);
+    }
+
+    private void RegisterEnemyRemoved(Enemy enemy)
+    {
+        _aliveEnemies = Mathf.Max(0, _aliveEnemies - 1);
+
         _enemiesRemoved++;
         OnWaveEnemyProgress?.Invoke(_enemiesRemoved, CurrentWave.EnemiesPerWave);
     }
