@@ -439,7 +439,15 @@ public class UIController : MonoBehaviour
 
     public void NextLevel()
     {
-        SceneManager.LoadScene($"{GameManager.Instance.GetMaxUnlockedLevel() + 1}.Level{GameManager.Instance.GetMaxUnlockedLevel()}");
+        var maxUnlockedLevel = GameManager.Instance.GetMaxUnlockedLevel();
+        if (maxUnlockedLevel > 5)
+        {
+            MainMenu();
+        }
+        else 
+        {
+            SceneManager.LoadScene($"{maxUnlockedLevel + 1}.Level{maxUnlockedLevel}");
+        }
     }
 
     #endregion

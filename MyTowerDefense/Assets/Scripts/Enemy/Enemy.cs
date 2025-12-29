@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
             return;
 
         _despawnedThisLife = true;
-        OnEnemyDestroyed?.Invoke(this);
+        //OnEnemyDestroyed?.Invoke(this);
     }
 
     void Update()
