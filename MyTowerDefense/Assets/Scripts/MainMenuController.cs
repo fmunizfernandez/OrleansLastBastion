@@ -32,7 +32,7 @@ public class MainMenuController : MonoBehaviour
     
     public void Continue() 
     {
-        //GenerateButtons();
+        GenerateButtons();
         mainMenuPanel.SetActive(false);
         levelPanel.SetActive(true);
     }

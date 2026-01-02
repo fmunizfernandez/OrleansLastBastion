@@ -3,14 +3,6 @@
         {
             "Level": 1,
             "IsPassed": false
-        },
-        {
-            "Level": 5,
-            "IsPassed": true
-        },
-        {
-            "Level": 6,
-            "IsPassed": false
         }
     ]
 }
